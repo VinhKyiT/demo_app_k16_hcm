@@ -1,10 +1,16 @@
 /* eslint-disable react-native/no-inline-styles */
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  SafeAreaView,
+} from 'react-native';
 import React from 'react';
 
-const Layout01 = () => {
+const Layout02 = () => {
   return (
-    <View style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1}}>
       <View style={{flex: 1}}>
         <View style={{flexDirection: 'row', flex: 1}}>
           <View
@@ -30,15 +36,34 @@ const Layout01 = () => {
               borderWidth: 1,
               borderColor: 'black',
             }}>
-            <Text
+            <View
               style={{
-                fontWeight: '500',
-                fontSize: 16,
-                color: '#000000',
-                margin: 20,
+                borderBottomColor: 'black',
+                borderBottomWidth: 1,
+                flex: 1,
+                justifyContent: 'center',
               }}>
-              Tôi tên là Kỳ!
-            </Text>
+              <Text
+                style={{
+                  fontWeight: '500',
+                  fontSize: 16,
+                  color: '#000000',
+                  marginHorizontal: 20,
+                }}>
+                Tôi tên là Kỳ!
+              </Text>
+            </View>
+            <View style={{flex: 1, justifyContent: 'center'}}>
+              <Text
+                style={{
+                  fontWeight: '500',
+                  fontSize: 16,
+                  color: '#000000',
+                  marginHorizontal: 20,
+                }}>
+                Tôi năm nay 25 tuổi!
+              </Text>
+            </View>
           </View>
         </View>
         <View style={{flexDirection: 'row', flex: 1}}>
@@ -47,17 +72,22 @@ const Layout01 = () => {
               flex: 2,
               borderWidth: 1,
               borderColor: 'black',
-              justifyContent: 'center',
-              alignItems: 'center',
             }}>
-            <Text
-              style={{
-                fontWeight: '500',
-                fontSize: 16,
-                color: '#000000',
-              }}>
-              Dòng chữ này nằm ở giữa
-            </Text>
+            <View style={{flex: 1, flexDirection: 'row'}}>
+              <View style={{flex: 1, backgroundColor: '#5C61F4'}} />
+              <View style={{flex: 1}} />
+            </View>
+            <View
+              style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+              <Text
+                style={{
+                  fontWeight: '500',
+                  fontSize: 16,
+                  color: '#000000',
+                }}>
+                Dòng chữ này nằm ở giữa
+              </Text>
+            </View>
           </View>
           <View
             style={{
@@ -65,15 +95,37 @@ const Layout01 = () => {
               borderWidth: 1,
               borderColor: 'black',
             }}>
-            <View style={{flex: 1, backgroundColor: '#5C61F4'}} />
+            <View style={{flex: 1}} />
             <View style={{flex: 1, backgroundColor: '#4CAF50'}} />
           </View>
         </View>
         <View style={{flexDirection: 'row', flex: 1}}>
           <View View style={{flex: 1, flexDirection: 'row'}}>
-            <View style={{flex: 1, backgroundColor: '#223263'}} />
-            <View style={{flex: 1, backgroundColor: '#9098B1'}} />
-            <View style={{flex: 1, backgroundColor: '#FF3D00'}} />
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: '#223263',
+                justifyContent: 'center',
+              }}>
+              <Text style={{color: 'white'}}>Text 1</Text>
+            </View>
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: '#9098B1',
+                alignItems: 'center',
+              }}>
+              <Text style={{color: 'white'}}>Text 2</Text>
+            </View>
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: '#FF3D00',
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+              }}>
+              <Text style={{color: 'white'}}>Text 3</Text>
+            </View>
           </View>
         </View>
       </View>
@@ -144,11 +196,11 @@ const Layout01 = () => {
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
-export default Layout01;
+export default Layout02;
 
 const styles = StyleSheet.create({
   container: {},
