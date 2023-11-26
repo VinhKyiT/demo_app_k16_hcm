@@ -5,7 +5,14 @@ import {
   FlatList,
   RefreshControl,
   ActivityIndicator,
+  StyleSheet,
 } from 'react-native';
+import {FONTS} from '../constants/fonts';
+
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import ProductItem from '../components/ProductItem';
+import {ENV} from '../constants/env';
 
 const data = [
   {id: '1', name: 'Nguyen Van A', age: 20},
@@ -31,18 +38,18 @@ const FlatListDemo = () => {
 
   const flatListRef = useRef();
 
-  const getData = async (offset, limit) => {
+  const getData = useCallback(async (offset, limit) => {
     const url = `http://store.kybuidev.com/api/v1/products?offset=${offset}&limit=${limit}`;
     console.log(url);
     return await fetch(url);
-  };
+  }, []);
 
   useEffect(() => {
     getData(0, 30)
       .then(res => res.json())
       .then(res => setListData(res))
-      .catch();
-  }, []);
+      .catch(err => console.log(err));
+  }, [getData]);
 
   const onRefresh = useCallback(() => {
     try {
@@ -50,19 +57,21 @@ const FlatListDemo = () => {
         return;
       }
       setRefreshing(true);
-      setTimeout(() => {
-        setListData(prev => [
-          {id: '12', name: 'Nguyen Van G', age: 40},
-          ...prev,
-        ]);
-        setRefreshing(false);
-      }, 4000);
+      getData(0, 30)
+        .then(res => res.json())
+        .then(res => {
+          setListData(res);
+          setRefreshing(false);
+          setIsEndList(false);
+          setCurrentOffset(30);
+        })
+        .catch(err => console.log(err));
     } catch (error) {
-    } finally {
+      console.log(error);
     }
-  }, [refreshing]);
+  }, [getData, refreshing]);
 
-  const handleLoadMore = () => {
+  const handleLoadMore = useCallback(() => {
     try {
       if (loadingMore || isEndList || listData?.length === 0) {
         return; // Đã đang trong quá trình tải hoặc đã tải hết dữ liệu
@@ -82,29 +91,55 @@ const FlatListDemo = () => {
         .catch();
     } catch (error) {
       console.log(error);
-    } finally {
     }
-  };
+  }, [currentOffset, getData, isEndList, listData?.length, loadingMore]);
+
+  const ItemSeparatorComponent = useCallback(
+    () => <View style={styles.itemSeparator} />,
+    [],
+  );
+
+  const ListFooterComponent = useCallback(() => {
+    // 1. Kiểm tra listData.length, nếu bằng 0 thì không render ra gì hết.
+    // 2. Kiểm tra isEndList, nếu là true thì render ra chữ "Đã hết"
+    // 3. Kiểm tra loadingMore, nếu là true thì hiển thị ActivityIndicator.
+    // 4. Ngược lại thì không hiển thị gì hết (null)
+    return (
+      <View style={styles.listFooterContainer}>
+        {listData.length !== 0 ? (
+          isEndList ? (
+            <Text style={styles.endListText}>Đã hết</Text>
+          ) : loadingMore ? (
+            <ActivityIndicator />
+          ) : null
+        ) : null}
+      </View>
+    );
+  }, [isEndList, listData.length, loadingMore]);
 
   const ListHeaderComponent = useCallback(() => {
-    console.log('loadingMore', loadingMore);
-    return listData.length !== 0 ? (
-      loadingMore ? (
-        <ActivityIndicator />
-      ) : (
-        <Text
-          style={{
-            alignSelf: 'center',
-            marginTop: 16,
-            fontSize: 20,
-            fontWeight: '500',
-            color: '#000',
-          }}>
-          Đã hết
-        </Text>
-      )
-    ) : null;
-  }, [listData.length, loadingMore]);
+    return (
+      <View style={styles.listHeaderContainer}>
+        <FontAwesome
+          name="fighter-jet"
+          size={24}
+          color={'red'}
+          style={{marginRight: 8}}
+        />
+        <Text style={styles.listHeaderText}>Danh sách FlatList</Text>
+        <View>
+          <AntDesign
+            name="pluscircleo"
+            size={24}
+            color={'green'}
+            style={{marginLeft: 8}}
+          />
+        </View>
+      </View>
+    );
+  }, []);
+
+  const renderItem = useCallback(({item}) => <ProductItem item={item} />, []);
 
   return (
     <FlatList
@@ -121,44 +156,49 @@ const FlatListDemo = () => {
       }
       onEndReached={handleLoadMore}
       onEndReachedThreshold={0.1}
-      ItemSeparatorComponent={<View style={{height: 20}} />}
-      contentContainerStyle={{
-        paddingHorizontal: 16,
-        paddingVertical: 16,
-      }}
-      ListHeaderComponent={
-        <Text
-          style={{
-            alignSelf: 'center',
-            marginBottom: 16,
-            fontSize: 20,
-            fontWeight: '500',
-            color: '#000',
-          }}>
-          Danh sách FlatList
-        </Text>
-      }
-      ListFooterComponent={ListHeaderComponent}
-      renderItem={({item}) => (
-        <View
-          style={{
-            padding: 16,
-            borderColor: 'black',
-            borderWidth: 1,
-            borderRadius: 16,
-          }}>
-          <View style={{flexDirection: 'row'}}>
-            <Text>Tên: </Text>
-            <Text>{item.title}</Text>
-          </View>
-          <View style={{flexDirection: 'row', marginTop: 4}}>
-            <Text>Giá: </Text>
-            <Text>{item.price}</Text>
-          </View>
-        </View>
-      )}
+      initialNumToRender={12}
+      windowSize={25}
+      ItemSeparatorComponent={ItemSeparatorComponent}
+      contentContainerStyle={styles.contentContainer}
+      ListHeaderComponent={ListHeaderComponent}
+      ListFooterComponent={ListFooterComponent}
+      renderItem={renderItem}
     />
   );
 };
 
 export default FlatListDemo;
+
+const styles = StyleSheet.create({
+  contentContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+  },
+  listFooterContainer: {
+    width: '100%',
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  endListText: {
+    alignSelf: 'center',
+    marginTop: 16,
+    fontSize: 20,
+    fontWeight: '500',
+    color: '#000',
+  },
+  listHeaderText: {
+    alignSelf: 'center',
+    marginBottom: 16,
+    fontSize: 20,
+    color: '#000',
+    fontFamily: FONTS.MEDIUM,
+  },
+  itemSeparator: {
+    height: 20,
+  },
+  listHeaderContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+});

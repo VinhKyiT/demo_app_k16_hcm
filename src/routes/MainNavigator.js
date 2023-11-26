@@ -1,14 +1,14 @@
 import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
 // import screens
-import DetailScreen from '../screens/Detail';
-import HomeScreen from '../screens/Home';
-import MyListScreen from '../screens/MyList';
-import MyTodoScreen from '../screens/MyTodo';
-import TodoListScreen from '../screens/TodoList';
-import TaskDetailScreen from '../screens/TaskDetail';
-import FlatListDemo from '../examples/FlatListDemo';
-import SectionListDemo from '../examples/SectionListDemo';
+import DetailScreen from '~screens/Detail';
+import HomeScreen from '~screens/Home';
+import MyListScreen from '~screens/MyList';
+import MyTodoScreen from '~screens/MyTodo';
+import TodoListScreen from '~screens/TodoList';
+import TaskDetailScreen from '~screens/TaskDetail';
+import FlatListDemo from '~examples/FlatListDemo';
+import SectionListDemo from '~examples/SectionListDemo';
 
 const Stack = createStackNavigator();
 
