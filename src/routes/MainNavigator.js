@@ -9,6 +9,11 @@ import TodoListScreen from '~screens/TodoList';
 import TaskDetailScreen from '~screens/TaskDetail';
 import FlatListDemo from '~examples/FlatListDemo';
 import SectionListDemo from '~examples/SectionListDemo';
+import FlatListUser from '../examples/exercise/btvn_22';
+import DemoEventEmitter from '../examples/DemoEventEmitter';
+import DebouncingScreen from '../examples/Debouncing';
+import ThrottlingScreen from '../examples/Throttling';
+import UseReducerDemo from '../examples/UseReducerDemo';
 
 const Stack = createStackNavigator();
 
@@ -30,7 +35,12 @@ function MainNavigator() {
       <Stack.Screen name="TodoList" component={TodoListScreen} />
       <Stack.Screen name="TaskDetail" component={TaskDetailScreen} />
       <Stack.Screen name="FlatListDemo" component={FlatListDemo} />
+      <Stack.Screen name="FlatListUser" component={FlatListUser} />
       <Stack.Screen name="SectionListDemo" component={SectionListDemo} />
+      <Stack.Screen name="DemoEventEmitter" component={DemoEventEmitter} />
+      <Stack.Screen name="DebouncingScreen" component={DebouncingScreen} />
+      <Stack.Screen name="ThrottlingScreen" component={ThrottlingScreen} />
+      <Stack.Screen name="UseReducerDemo" component={UseReducerDemo} />
     </Stack.Navigator>
   );
 }

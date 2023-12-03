@@ -7,20 +7,27 @@ import {
   TouchableOpacity,
   Keyboard,
 } from 'react-native';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useState, useReducer} from 'react';
 import {v4 as uuidv4} from 'uuid';
 import TodoItem from '../../components/TodoItem';
 import {ICONS} from '../../assets/icons';
 import {useNavigation} from '@react-navigation/native';
+import {initialTodoState, todoReducer} from './todoReducer';
+import {HANDLE_ITEM_CHECKBOX_PRESS, SET_TODO_LIST} from './todoActions';
 const TodoListScreen = () => {
-  const [todoList, setTodoList] = useState([]);
-  const [taskDoneList, setTaskDoneList] = useState([]);
   const [todo, setTodo] = useState('');
+  const [todoState, dispatch] = useReducer(todoReducer, initialTodoState);
 
   const navigation = useNavigation();
 
+  console.log('todoState', todoState);
+
   const handleAddItem = useCallback(() => {
-    setTodoList(prev => [...prev, {id: uuidv4(), title: todo, status: 'todo'}]);
+    // setTodoList(prev => [...prev, {id: uuidv4(), title: todo, status: 'todo'}]);
+    dispatch({
+      type: SET_TODO_LIST,
+      payload: {id: uuidv4(), title: todo, status: 'todo'},
+    });
     setTodo('');
     Keyboard.dismiss();
   }, [todo]);
@@ -29,23 +36,21 @@ const TodoListScreen = () => {
     navigation.navigate('TaskDetail', {item});
   };
 
-  const handleItemCheckboxPress = useCallback(
-    itemId => {
-      const newTodo = todoList.find(element => element.id === itemId);
-      if (newTodo) {
-        setTaskDoneList(prev => [...prev, {...newTodo, status: 'done'}]);
-        setTodoList(prev => prev.filter(item => item.id !== itemId));
-      }
-    },
-    [todoList],
-  );
+  const handleItemCheckboxPress = useCallback(itemId => {
+    // const newTodo = todoList.find(element => element.id === itemId);
+    // if (newTodo) {
+    //   setTaskDoneList(prev => [...prev, {...newTodo, status: 'done'}]);
+    //   setTodoList(prev => prev.filter(item => item.id !== itemId));
+    // }
+    dispatch({type: HANDLE_ITEM_CHECKBOX_PRESS, payload: itemId});
+  }, []);
 
   return (
     <View style={styles.container}>
       <View style={styles.listWrapper}>
         <View>
           <Text style={styles.sectionTitle}>Today's Tasks</Text>
-          {todoList.map(item => {
+          {todoState.todoList.map(item => {
             return (
               <TodoItem
                 key={item.id}
@@ -58,7 +63,7 @@ const TodoListScreen = () => {
         </View>
         <View>
           <Text style={styles.sectionTitle}>Tasks Done</Text>
-          {taskDoneList.map(item => {
+          {todoState.taskDoneList.map(item => {
             return (
               <TodoItem
                 key={item.id}
