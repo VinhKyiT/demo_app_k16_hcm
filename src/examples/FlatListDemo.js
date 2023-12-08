@@ -1,18 +1,12 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  RefreshControl,
-  ActivityIndicator,
-  StyleSheet,
-} from 'react-native';
+import React, {useCallback, useEffect, useReducer, useRef, useState} from 'react';
+import {View, Text, FlatList, RefreshControl, ActivityIndicator, StyleSheet} from 'react-native';
 import {FONTS} from '../constants/fonts';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import ProductItem from '../components/ProductItem';
 import {ENV} from '../constants/env';
+import useAuth from '~hooks/useAuth';
 
 const data = [
   {id: '1', name: 'Nguyen Van A', age: 20},
@@ -29,12 +23,69 @@ const data = [
   // ...
 ];
 
+// initialState
+const listInitialState = {
+  listData: [],
+  isEndList: false,
+  refreshing: false,
+  loadingMore: false,
+};
+
+// reducer
+const listReducer = (state, action) => {
+  const {type, payload} = action;
+  switch (type) {
+    case GET_DATA:
+      return {
+        ...state,
+        listData: payload,
+      };
+    case REFRESH_LIST:
+      return {
+        ...state,
+        isEndList: false,
+        listData: payload,
+        refreshing: false,
+      };
+    case LOAD_MORE:
+      return {
+        ...state,
+        listData: [...state.listData, ...payload],
+        loadingMore: false,
+      };
+    case SET_IS_END_LIST:
+      return {
+        ...state,
+        isEndList: payload,
+      };
+    case SET_IS_REFRESHING:
+      return {
+        ...state,
+        refreshing: payload,
+      };
+    case SET_IS_LOAD_MORE:
+      return {
+        ...state,
+        loadingMore: payload,
+      };
+    default:
+      return state;
+  }
+};
+
+// actions
+const GET_DATA = 'GET_DATA';
+const REFRESH_LIST = 'REFRESH_LIST';
+const LOAD_MORE = 'LOAD_MORE';
+const SET_IS_REFRESHING = 'SET_IS_REFRESHING';
+const SET_IS_LOAD_MORE = 'SET_IS_LOAD_MORE';
+const SET_IS_END_LIST = 'SET_IS_END_LIST';
+
 const FlatListDemo = () => {
-  const [refreshing, setRefreshing] = useState(false);
-  const [listData, setListData] = useState([]);
-  const [loadingMore, setLoadingMore] = useState(false);
-  const [isEndList, setIsEndList] = useState(false);
   const [currentOffset, setCurrentOffset] = useState(30);
+  const [state, dispatch] = useReducer(listReducer, listInitialState);
+  const {userInfo: user} = useAuth();
+  console.log(user);
 
   const flatListRef = useRef();
 
@@ -47,57 +98,56 @@ const FlatListDemo = () => {
   useEffect(() => {
     getData(0, 30)
       .then(res => res.json())
-      .then(res => setListData(res))
+      .then(res => {
+        dispatch({type: GET_DATA, payload: res});
+      })
       .catch(err => console.log(err));
   }, [getData]);
 
   const onRefresh = useCallback(() => {
     try {
-      if (refreshing) {
+      if (state.refreshing) {
         return;
       }
-      setRefreshing(true);
+      // setRefreshing(true);
+      dispatch({type: SET_IS_REFRESHING, payload: true});
       getData(0, 30)
         .then(res => res.json())
         .then(res => {
-          setListData(res);
-          setRefreshing(false);
-          setIsEndList(false);
+          dispatch({type: REFRESH_LIST, payload: res});
+          dispatch({type: SET_IS_END_LIST, payload: false});
           setCurrentOffset(30);
         })
         .catch(err => console.log(err));
     } catch (error) {
       console.log(error);
     }
-  }, [getData, refreshing]);
+  }, [getData, state.refreshing]);
 
   const handleLoadMore = useCallback(() => {
     try {
-      if (loadingMore || isEndList || listData?.length === 0) {
+      if (state.loadingMore || state.isEndList || state.listData?.length === 0) {
         return; // Đã đang trong quá trình tải hoặc đã tải hết dữ liệu
       }
-      setLoadingMore(true);
+      dispatch({type: SET_IS_LOAD_MORE, payload: true});
       console.log('Load more...');
       getData(currentOffset, 10)
         .then(res => res.json())
         .then(res => {
           if (res?.length === 0) {
-            setIsEndList(true);
+            dispatch({type: SET_IS_END_LIST, payload: true});
           }
-          setListData(prev => [...prev, ...res]);
+          // setListData(prev => [...prev, ...res]);
+          dispatch({type: LOAD_MORE, payload: res});
           setCurrentOffset(currentOffset + 10);
-          setLoadingMore(false);
         })
         .catch();
     } catch (error) {
       console.log(error);
     }
-  }, [currentOffset, getData, isEndList, listData?.length, loadingMore]);
+  }, [currentOffset, getData, state.isEndList, state.listData?.length, state.loadingMore]);
 
-  const ItemSeparatorComponent = useCallback(
-    () => <View style={styles.itemSeparator} />,
-    [],
-  );
+  const ItemSeparatorComponent = useCallback(() => <View style={styles.itemSeparator} />, []);
 
   const ListFooterComponent = useCallback(() => {
     // 1. Kiểm tra listData.length, nếu bằng 0 thì không render ra gì hết.
@@ -106,56 +156,46 @@ const FlatListDemo = () => {
     // 4. Ngược lại thì không hiển thị gì hết (null)
     return (
       <View style={styles.listFooterContainer}>
-        {listData.length !== 0 ? (
-          isEndList ? (
+        {state.listData.length !== 0 ? (
+          state.isEndList ? (
             <Text style={styles.endListText}>Đã hết</Text>
-          ) : loadingMore ? (
+          ) : state.loadingMore ? (
             <ActivityIndicator />
           ) : null
         ) : null}
       </View>
     );
-  }, [isEndList, listData.length, loadingMore]);
+  }, [state.isEndList, state.listData.length, state.loadingMore]);
 
   const ListHeaderComponent = useCallback(() => {
     return (
       <View style={styles.listHeaderContainer}>
-        <FontAwesome
-          name="fighter-jet"
-          size={24}
-          color={'red'}
-          style={{marginRight: 8}}
-        />
-        <Text style={styles.listHeaderText}>Danh sách FlatList</Text>
+        <FontAwesome name="fighter-jet" size={24} color={'red'} style={{marginRight: 8}} />
+        <Text style={styles.listHeaderText}>Xin chào, {user.name}</Text>
         <View>
-          <AntDesign
-            name="pluscircleo"
-            size={24}
-            color={'green'}
-            style={{marginLeft: 8}}
-          />
+          <AntDesign name="pluscircleo" size={24} color={'green'} style={{marginLeft: 8}} />
         </View>
       </View>
     );
-  }, []);
+  }, [user.name]);
 
   const renderItem = useCallback(({item}) => <ProductItem item={item} />, []);
 
   return (
     <FlatList
       ref={flatListRef}
-      data={listData}
+      data={state.listData}
       keyExtractor={item => item.id}
-      extraData={loadingMore}
+      extraData={state.loadingMore}
       refreshControl={
         <RefreshControl
-          refreshing={refreshing}
+          refreshing={state.refreshing}
           onRefresh={onRefresh}
           colors={['red', 'orange', 'blue', 'green']}
         />
       }
       onEndReached={handleLoadMore}
-      onEndReachedThreshold={0.1}
+      onEndReachedThreshold={0.5}
       initialNumToRender={12}
       windowSize={25}
       ItemSeparatorComponent={ItemSeparatorComponent}
