@@ -14,33 +14,46 @@ import DemoEventEmitter from '../examples/DemoEventEmitter';
 import DebouncingScreen from '../examples/Debouncing';
 import ThrottlingScreen from '../examples/Throttling';
 import UseReducerDemo from '../examples/UseReducerDemo';
+import ParentComponent from '~examples/ContextDemo/ParentComponent';
+import Counter from '~screens/Counter';
+import LoginScreen from '~screens/Login';
+import useAuth from '~hooks/useAuth';
 
 const Stack = createStackNavigator();
 
 function MainNavigator() {
+  const {isLoggedIn} = useAuth();
   return (
-    <Stack.Navigator
-      screenOptions={{headerShown: false}}
-      initialRouteName="FlatListDemo">
-      <Stack.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{
-          title: 'Trang chủ',
-        }}
-      />
-      <Stack.Screen name="Detail" component={DetailScreen} />
-      <Stack.Screen name="MyList" component={MyListScreen} />
-      <Stack.Screen name="MyTodo" component={MyTodoScreen} />
-      <Stack.Screen name="TodoList" component={TodoListScreen} />
-      <Stack.Screen name="TaskDetail" component={TaskDetailScreen} />
-      <Stack.Screen name="FlatListDemo" component={FlatListDemo} />
-      <Stack.Screen name="FlatListUser" component={FlatListUser} />
-      <Stack.Screen name="SectionListDemo" component={SectionListDemo} />
-      <Stack.Screen name="DemoEventEmitter" component={DemoEventEmitter} />
-      <Stack.Screen name="DebouncingScreen" component={DebouncingScreen} />
-      <Stack.Screen name="ThrottlingScreen" component={ThrottlingScreen} />
-      <Stack.Screen name="UseReducerDemo" component={UseReducerDemo} />
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      {isLoggedIn ? (
+        <>
+          <Stack.Screen name="FlatListDemo" component={FlatListDemo} />
+          <Stack.Screen
+            name="Home"
+            component={HomeScreen}
+            options={{
+              title: 'Trang chủ',
+            }}
+          />
+          <Stack.Screen name="Detail" component={DetailScreen} />
+          <Stack.Screen name="MyList" component={MyListScreen} />
+          <Stack.Screen name="MyTodo" component={MyTodoScreen} />
+          <Stack.Screen name="TodoList" component={TodoListScreen} />
+          <Stack.Screen name="TaskDetail" component={TaskDetailScreen} />
+          <Stack.Screen name="FlatListUser" component={FlatListUser} />
+          <Stack.Screen name="SectionListDemo" component={SectionListDemo} />
+          <Stack.Screen name="DemoEventEmitter" component={DemoEventEmitter} />
+          <Stack.Screen name="DebouncingScreen" component={DebouncingScreen} />
+          <Stack.Screen name="ThrottlingScreen" component={ThrottlingScreen} />
+          <Stack.Screen name="UseReducerDemo" component={UseReducerDemo} />
+          <Stack.Screen name="ContextDemo" component={ParentComponent} />
+          <Stack.Screen name="Counter" component={Counter} />
+        </>
+      ) : (
+        <>
+          <Stack.Screen name="LoginScreen" component={LoginScreen} />
+        </>
+      )}
     </Stack.Navigator>
   );
 }
