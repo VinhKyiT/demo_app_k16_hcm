@@ -18,6 +18,8 @@ import ParentComponent from '~examples/ContextDemo/ParentComponent';
 import Counter from '~screens/Counter';
 import LoginScreen from '~screens/Login';
 import useAuth from '~hooks/useAuth';
+import CartScreen from '~screens/Cart';
+import RegisterScreen from '~screens/Register';
 
 const Stack = createStackNavigator();
 
@@ -48,10 +50,12 @@ function MainNavigator() {
           <Stack.Screen name="UseReducerDemo" component={UseReducerDemo} />
           <Stack.Screen name="ContextDemo" component={ParentComponent} />
           <Stack.Screen name="Counter" component={Counter} />
+          <Stack.Screen name="Cart" component={CartScreen} />
         </>
       ) : (
         <>
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
+          <Stack.Screen name="Register" component={RegisterScreen} />
         </>
       )}
     </Stack.Navigator>

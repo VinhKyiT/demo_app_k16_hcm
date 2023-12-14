@@ -1,4 +1,5 @@
 import React, {createContext, useState, useCallback} from 'react';
+import axios from 'axios';
 
 export const AuthContext = createContext();
 
@@ -11,8 +12,8 @@ const AuthProvider = ({children}) => {
   const handleLogin = useCallback(async (_email, _password) => {
     setIsLoading(true);
     try {
-      const userJson = await fetch('https://store.kybuidev.com/api/v1/users/3');
-      const user = await userJson.json();
+      const userResponse = await axios.get('https://store.kybuidev.com/api/v1/users/1');
+      const user = await userResponse.data;
       if (user) {
         if (user.email !== _email) {
           setError('Vui long nhap dung email');
@@ -34,8 +35,24 @@ const AuthProvider = ({children}) => {
     }
   }, []);
 
+  const handleRegister = async (_email, _password, _name) => {
+    try {
+      const res = await axios.post('https://store.kybuidev.com/api/v1/users', {
+        name: _name,
+        email: _email,
+        password: _password,
+        avatar: 'https://picsum.photos/800',
+        role: 'customer',
+      });
+      console.log('res', res);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{isLoggedIn, isLoading, handleLogin, error, userInfo}}>
+    <AuthContext.Provider
+      value={{isLoggedIn, isLoading, handleLogin, handleRegister, error, userInfo}}>
       {children}
     </AuthContext.Provider>
   );

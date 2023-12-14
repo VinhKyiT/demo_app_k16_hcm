@@ -1,5 +1,13 @@
 import React, {useCallback, useEffect, useReducer, useRef, useState} from 'react';
-import {View, Text, FlatList, RefreshControl, ActivityIndicator, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  RefreshControl,
+  ActivityIndicator,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import {FONTS} from '../constants/fonts';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -7,6 +15,8 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import ProductItem from '../components/ProductItem';
 import {ENV} from '../constants/env';
 import useAuth from '~hooks/useAuth';
+import {useNavigation} from '@react-navigation/native';
+import useCart from '~hooks/useCart';
 
 const data = [
   {id: '1', name: 'Nguyen Van A', age: 20},
@@ -85,7 +95,9 @@ const FlatListDemo = () => {
   const [currentOffset, setCurrentOffset] = useState(30);
   const [state, dispatch] = useReducer(listReducer, listInitialState);
   const {userInfo: user} = useAuth();
-  console.log(user);
+  const {handleAddToCart, handleRemoveFromCart} = useCart();
+
+  const navigation = useNavigation();
 
   const flatListRef = useRef();
 
@@ -172,14 +184,17 @@ const FlatListDemo = () => {
       <View style={styles.listHeaderContainer}>
         <FontAwesome name="fighter-jet" size={24} color={'red'} style={{marginRight: 8}} />
         <Text style={styles.listHeaderText}>Xin chào, {user.name}</Text>
-        <View>
-          <AntDesign name="pluscircleo" size={24} color={'green'} style={{marginLeft: 8}} />
-        </View>
+        <TouchableOpacity activeOpacity={0.5} onPress={() => navigation.navigate('Cart')}>
+          <AntDesign name="shoppingcart" size={24} color={'green'} style={{marginLeft: 8}} />
+        </TouchableOpacity>
       </View>
     );
-  }, [user.name]);
+  }, [navigation, user.name]);
 
-  const renderItem = useCallback(({item}) => <ProductItem item={item} />, []);
+  const renderItem = useCallback(
+    ({item}) => <ProductItem item={item} onAddToCart={() => handleAddToCart(item)} />,
+    [handleAddToCart],
+  );
 
   return (
     <FlatList
@@ -233,6 +248,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#000',
     fontFamily: FONTS.MEDIUM,
+    flexGrow: 1,
+    textAlign: 'center',
   },
   itemSeparator: {
     height: 20,
