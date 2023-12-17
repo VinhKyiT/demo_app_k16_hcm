@@ -6,18 +6,21 @@ import {
   TextInput,
   TouchableOpacity,
   Keyboard,
+  AppState,
 } from 'react-native';
-import React, {useCallback, useState, useReducer} from 'react';
+import React, {useCallback, useState, useReducer, useEffect, useRef} from 'react';
 import {v4 as uuidv4} from 'uuid';
 import TodoItem from '../../components/TodoItem';
 import {ICONS} from '../../assets/icons';
 import {useNavigation} from '@react-navigation/native';
 import {initialTodoState, todoReducer} from './todoReducer';
-import {HANDLE_ITEM_CHECKBOX_PRESS, SET_TODO_LIST} from './todoActions';
+import {HANDLE_ITEM_CHECKBOX_PRESS, REINIT_TODO_STATE, SET_TODO_LIST} from './todoActions';
+import LocalStorage from '../../helpers/storage';
 const TodoListScreen = () => {
   const [todo, setTodo] = useState('');
   const [todoState, dispatch] = useReducer(todoReducer, initialTodoState);
-
+  const appState = useRef(AppState.currentState);
+  const [appStateVisible, setAppStateVisible] = useState(appState.current);
   const navigation = useNavigation();
 
   console.log('todoState', todoState);
@@ -43,6 +46,43 @@ const TodoListScreen = () => {
     //   setTodoList(prev => prev.filter(item => item.id !== itemId));
     // }
     dispatch({type: HANDLE_ITEM_CHECKBOX_PRESS, payload: itemId});
+  }, []);
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
+        console.log('App has come to the foreground!');
+      }
+
+      appState.current = nextAppState;
+      setAppStateVisible(appState.current);
+      console.log('AppState', appState.current);
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  const handleAppStateChange = useCallback(async () => {
+    if (appStateVisible.match(/inactive|background/)) {
+      // Lưu dữ liệu
+      await LocalStorage.storeData('TODO_LIST_DATA', todoState);
+    }
+  }, [appStateVisible, todoState]);
+
+  useEffect(() => {
+    handleAppStateChange();
+  }, [handleAppStateChange]);
+
+  useEffect(() => {
+    (async () => {
+      const storedData = await LocalStorage.getData('TODO_LIST_DATA');
+      console.log('storedData', storedData);
+      if (storedData) {
+        dispatch({type: REINIT_TODO_STATE, payload: JSON.parse(storedData)});
+      }
+    })();
   }, []);
 
   return (

@@ -2,17 +2,24 @@ import {View, Text, TextInput, Alert} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomButton from '~components/CustomButton';
 import useAuth from '~hooks/useAuth';
+import {useNavigation} from '@react-navigation/native';
 
 const RegisterScreen = () => {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
 
+  const navigation = useNavigation();
+
   const {handleRegister} = useAuth();
+
+  const onSuccess = userData => {
+    navigation.navigate('LoginScreen', {registeredEmail: userData?.email});
+  };
 
   return (
     <View style={{paddingHorizontal: 16}}>
-      <Text style={{textAlign: 'center', fontSize: 24, color: '#000'}}>Đăng nhập</Text>
+      <Text style={{textAlign: 'center', fontSize: 24, color: '#000'}}>Đăng ký</Text>
       <TextInput
         style={{
           borderRadius: 8,
@@ -47,7 +54,10 @@ const RegisterScreen = () => {
         onChangeText={setPassword}
         secureTextEntry
       />
-      <CustomButton title={'Đăng ký'} onPress={() => handleRegister(email, password, name)} />
+      <CustomButton
+        title={'Đăng ký'}
+        onPress={() => handleRegister(email, password, name, onSuccess)}
+      />
     </View>
   );
 };

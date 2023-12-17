@@ -1,5 +1,5 @@
 import {createStackNavigator} from '@react-navigation/stack';
-import React from 'react';
+import React, {useCallback, useEffect} from 'react';
 // import screens
 import DetailScreen from '~screens/Detail';
 import HomeScreen from '~screens/Home';
@@ -20,15 +20,28 @@ import LoginScreen from '~screens/Login';
 import useAuth from '~hooks/useAuth';
 import CartScreen from '~screens/Cart';
 import RegisterScreen from '~screens/Register';
+import AsyncStorageDemo from '../examples/AsyncStorageDemo';
+import LocalStorage from '../helpers/storage';
 
 const Stack = createStackNavigator();
 
 function MainNavigator() {
-  const {isLoggedIn} = useAuth();
+  const {isLoggedIn, setLogin} = useAuth();
+  const retrieveLoggedInData = useCallback(async () => {
+    const data = await LocalStorage.getData('ACCESS_TOKEN');
+    if (data) {
+      setLogin(true);
+    }
+  }, [setLogin]);
+  useEffect(() => {
+    retrieveLoggedInData();
+  }, [retrieveLoggedInData]);
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       {isLoggedIn ? (
         <>
+          <Stack.Screen name="TodoList" component={TodoListScreen} />
+          <Stack.Screen name="AsyncStorageDemo" component={AsyncStorageDemo} />
           <Stack.Screen name="FlatListDemo" component={FlatListDemo} />
           <Stack.Screen
             name="Home"
@@ -40,7 +53,6 @@ function MainNavigator() {
           <Stack.Screen name="Detail" component={DetailScreen} />
           <Stack.Screen name="MyList" component={MyListScreen} />
           <Stack.Screen name="MyTodo" component={MyTodoScreen} />
-          <Stack.Screen name="TodoList" component={TodoListScreen} />
           <Stack.Screen name="TaskDetail" component={TaskDetailScreen} />
           <Stack.Screen name="FlatListUser" component={FlatListUser} />
           <Stack.Screen name="SectionListDemo" component={SectionListDemo} />

@@ -1,16 +1,18 @@
-import {View, Text, TextInput, Alert} from 'react-native';
+import {View, Text, TextInput, Alert, Switch} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomButton from '~components/CustomButton';
 import useAuth from '~hooks/useAuth';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isRememberLogin, setIsRememberLogin] = useState(false);
 
   const {handleLogin, error, isLoading} = useAuth();
 
   const navigation = useNavigation();
+  const {params} = useRoute();
 
   useEffect(() => {
     if (error) {
@@ -18,12 +20,17 @@ const LoginScreen = () => {
     }
   }, [error]);
 
+  useEffect(() => {
+    if (params?.registeredEmail) {
+      setEmail(params.registeredEmail);
+    }
+  }, [params]);
+
   return (
     <View style={{marginHorizontal: 16}}>
       <Text style={{textAlign: 'center', fontSize: 24, color: '#000'}}>Đăng nhập</Text>
       <TextInput
         style={{
-          marginHorizontal: 16,
           borderRadius: 8,
           borderWidth: 1,
           borderColor: '#000',
@@ -34,7 +41,6 @@ const LoginScreen = () => {
       />
       <TextInput
         style={{
-          marginHorizontal: 16,
           borderRadius: 8,
           borderWidth: 1,
           borderColor: '#000',
@@ -44,15 +50,25 @@ const LoginScreen = () => {
         onChangeText={setPassword}
         secureTextEntry
       />
+      <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 16}}>
+        <Switch
+          value={isRememberLogin}
+          onValueChange={setIsRememberLogin}
+          style={{
+            alignSelf: 'flex-start',
+            marginRight: 16,
+          }}
+        />
+        <Text>Ghi nhớ đăng nhập</Text>
+      </View>
       <CustomButton
         title={'Đăng nhập'}
-        onPress={() => handleLogin(email, password)}
+        onPress={() => handleLogin(email, password, isRememberLogin)}
         isLoading={isLoading}
       />
       <CustomButton
         title={'Đăng ký ngay!'}
         onPress={() => navigation.navigate('Register')}
-        isLoading={isLoading}
         containerStyle={{marginTop: 16}}
       />
     </View>
