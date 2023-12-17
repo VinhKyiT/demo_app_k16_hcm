@@ -1,4 +1,4 @@
-import {HANDLE_ITEM_CHECKBOX_PRESS, SET_TODO_LIST} from './todoActions';
+import {HANDLE_ITEM_CHECKBOX_PRESS, REINIT_TODO_STATE, SET_TODO_LIST} from './todoActions';
 
 // Giá trị khởi tạo
 const initialTodoState = {
@@ -24,6 +24,12 @@ const todoReducer = (state, action) => {
         taskDoneList: [...state.taskDoneList, {...newTodo, status: 'done'}],
         todoList: [...state.todoList].filter(item => item.id !== payload),
       };
+    case REINIT_TODO_STATE:
+      return {
+        ...payload,
+      };
+    default:
+      return state;
   }
 };
 

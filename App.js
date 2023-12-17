@@ -1,9 +1,9 @@
 import {NavigationContainer} from '@react-navigation/native';
 import React from 'react';
 import {View} from 'react-native';
-import MainNavigator from './src/routes/MainNavigator';
 import AuthProvider from '~contexts/AuthProvider';
 import CartProvider from '~contexts/CartProvider';
+import MainNavigator from './src/routes/MainNavigator';
 
 const App = () => {
   return (
