@@ -1,9 +1,16 @@
 import {TouchableOpacity, Text, StyleSheet, ActivityIndicator} from 'react-native';
-import React from 'react';
+import React, {useMemo} from 'react';
 
 const CustomButton = ({title, onPress, containerStyle, titleStyle, isLoading}) => {
+  const componentContainerStyle = useMemo(() => {
+    const defaultStyle = styles.container;
+    return {
+      ...defaultStyle,
+      ...containerStyle,
+    };
+  }, [containerStyle]);
   return (
-    <TouchableOpacity onPress={onPress} style={containerStyle ? containerStyle : styles.container}>
+    <TouchableOpacity onPress={onPress} style={componentContainerStyle}>
       {isLoading ? (
         <ActivityIndicator />
       ) : (
