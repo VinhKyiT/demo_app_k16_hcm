@@ -80,9 +80,25 @@ const AuthProvider = ({children}) => {
     setIsLoggedIn(value);
   }, []);
 
+  const handleLogout = useCallback(async () => {
+    await LocalStorage.removeData('ACCESS_TOKEN');
+    await LocalStorage.removeData('REFRESH_TOKEN');
+    setUserInfo({});
+    setIsLoggedIn(false);
+  }, []);
+
   return (
     <AuthContext.Provider
-      value={{isLoggedIn, isLoading, handleLogin, handleRegister, error, userInfo, setLogin}}>
+      value={{
+        isLoggedIn,
+        isLoading,
+        handleLogin,
+        handleRegister,
+        error,
+        userInfo,
+        setLogin,
+        handleLogout,
+      }}>
       {children}
     </AuthContext.Provider>
   );

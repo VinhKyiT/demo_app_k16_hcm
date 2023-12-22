@@ -49,31 +49,17 @@ const TodoListScreen = () => {
   }, []);
 
   useEffect(() => {
-    const subscription = AppState.addEventListener('change', nextAppState => {
-      if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
-        console.log('App has come to the foreground!');
+    const subscription = AppState.addEventListener('change', async nextAppState => {
+      if (nextAppState.match(/inactive|background/)) {
+        // Lưu dữ liệu
+        await LocalStorage.storeData('TODO_LIST_DATA', todoState);
       }
-
-      appState.current = nextAppState;
-      setAppStateVisible(appState.current);
-      console.log('AppState', appState.current);
     });
 
     return () => {
       subscription.remove();
     };
-  }, []);
-
-  const handleAppStateChange = useCallback(async () => {
-    if (appStateVisible.match(/inactive|background/)) {
-      // Lưu dữ liệu
-      await LocalStorage.storeData('TODO_LIST_DATA', todoState);
-    }
-  }, [appStateVisible, todoState]);
-
-  useEffect(() => {
-    handleAppStateChange();
-  }, [handleAppStateChange]);
+  }, [todoState]);
 
   useEffect(() => {
     (async () => {

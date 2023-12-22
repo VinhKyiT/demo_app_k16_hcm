@@ -179,6 +179,10 @@ const FlatListDemo = () => {
     );
   }, [state.isEndList, state.listData.length, state.loadingMore]);
 
+  useEffect(() => {
+    console.log('render flatlist demo');
+  }, []);
+
   const ListHeaderComponent = useCallback(() => {
     return (
       <View style={styles.listHeaderContainer}>
