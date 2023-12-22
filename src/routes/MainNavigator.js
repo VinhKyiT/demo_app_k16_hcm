@@ -22,6 +22,9 @@ import CartScreen from '~screens/Cart';
 import RegisterScreen from '~screens/Register';
 import AsyncStorageDemo from '../examples/AsyncStorageDemo';
 import LocalStorage from '../helpers/storage';
+import FastImageDemo from '~examples/FastImageDemo';
+import TabNavigator from './TabNavigator';
+import DrawerNavigator from './DrawerNavigator';
 
 const Stack = createStackNavigator();
 
@@ -40,6 +43,9 @@ function MainNavigator() {
     <Stack.Navigator screenOptions={{headerShown: false}}>
       {isLoggedIn ? (
         <>
+          <Stack.Screen name="DrawerNavigator" component={DrawerNavigator} />
+          {/* <Stack.Screen name="TabNavigator" component={TabNavigator} /> */}
+          <Stack.Screen name="FastImageDemo" component={FastImageDemo} />
           <Stack.Screen name="TodoList" component={TodoListScreen} />
           <Stack.Screen name="AsyncStorageDemo" component={AsyncStorageDemo} />
           <Stack.Screen name="FlatListDemo" component={FlatListDemo} />
