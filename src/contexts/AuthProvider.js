@@ -1,6 +1,7 @@
 import React, {createContext, useState, useCallback} from 'react';
 import axios from 'axios';
 import LocalStorage from '../helpers/storage';
+import NavigationServices from '../utils/NavigationServices';
 
 export const AuthContext = createContext();
 
@@ -46,11 +47,13 @@ const AuthProvider = ({children}) => {
           if (isRememberLogin) {
             LocalStorage.storeData('ACCESS_TOKEN', response?.data?.access_token);
             LocalStorage.storeData('REFRESH_TOKEN', response?.data?.refresh_token);
+            LocalStorage.storeData('USER_INFO', userData?.data);
           }
           setIsLoggedIn(true);
           setIsLoading(false);
           setUserInfo(userData?.data);
           setError('');
+          NavigationServices.replace('DrawerNavigator');
         }
       }
     } catch (err) {
@@ -80,11 +83,26 @@ const AuthProvider = ({children}) => {
     setIsLoggedIn(value);
   }, []);
 
+  const getLoginStatus = useCallback(async () => {
+    const data = await LocalStorage.getData('ACCESS_TOKEN');
+    if (data) {
+      setIsLoggedIn(true);
+      const userStoredInfo = await LocalStorage.getData('USER_INFO');
+      setUserInfo(JSON.parse(userStoredInfo));
+      NavigationServices.replace('DrawerNavigator');
+      return true;
+    } else {
+      NavigationServices.replace('LoginScreen');
+    }
+    return false;
+  }, []);
+
   const handleLogout = useCallback(async () => {
     await LocalStorage.removeData('ACCESS_TOKEN');
     await LocalStorage.removeData('REFRESH_TOKEN');
     setUserInfo({});
     setIsLoggedIn(false);
+    NavigationServices.reset({routes: [{name: 'AppSplash'}], index: 0});
   }, []);
 
   return (
@@ -98,6 +116,7 @@ const AuthProvider = ({children}) => {
         userInfo,
         setLogin,
         handleLogout,
+        getLoginStatus,
       }}>
       {children}
     </AuthContext.Provider>

@@ -1,10 +1,10 @@
-import {View, Text, StyleSheet, ActivityIndicator} from 'react-native';
 import React, {useEffect, useState} from 'react';
+import {ActivityIndicator, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
+import Feather from 'react-native-vector-icons/Feather';
 import {IMAGES} from '~assets/images';
-import CustomButton from '~components/CustomButton';
-
-const FastImageDemo = ({navigation}) => {
+import NavigationServices from '../utils/NavigationServices';
+const FastImageDemo = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
 
@@ -26,16 +26,28 @@ const FastImageDemo = ({navigation}) => {
 
   return (
     <View style={{flex: 1}}>
-      <Text
+      <View
         style={{
-          color: 'black',
-          fontSize: 20,
-          fontWeight: '500',
-          textAlign: 'center',
-          marginVertical: 8,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          paddingHorizontal: 16,
         }}>
-        Fast Image Demo
-      </Text>
+        <TouchableOpacity onPress={NavigationServices.openDrawer}>
+          <Feather name="menu" size={24} color="black" />
+        </TouchableOpacity>
+        <Text
+          style={{
+            color: 'black',
+            fontSize: 20,
+            fontWeight: '500',
+            textAlign: 'center',
+            marginVertical: 8,
+          }}>
+          Fast Image Demo
+        </Text>
+        <View style={{width: 24, height: 24}} />
+      </View>
       <View
         style={{
           width: 300,
@@ -64,12 +76,6 @@ const FastImageDemo = ({navigation}) => {
         {isLoading && <ActivityIndicator style={styles.loaderStyle} size={'large'} />}
         {!!errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
       </View>
-      <CustomButton
-        title={'Open Drawer'}
-        onPress={() => {
-          navigation.openDrawer();
-        }}
-      />
     </View>
   );
 };

@@ -17,18 +17,24 @@ const Drawer = createDrawerNavigator();
 
 const CustomDrawerContent = props => {
   const {navigation} = props;
-  const {handleLogout} = useAuth();
+  const {handleLogout, userInfo} = useAuth();
   return (
     <DrawerContentScrollView {...props} contentContainerStyle={{paddingTop: 0}}>
-      <View style={{width: '100%', height: 100, backgroundColor: '#668EBD'}}>
-        <View>
+      <View style={{width: '100%', height: 160, backgroundColor: '#668EBD', padding: 16}}>
+        <View style={{height: '100%', justifyContent: 'space-between'}}>
           {/* Avatar */}
-          <FastImage />
-          {/* Ten */}
-          <Text style={{color: 'white'}}>Ten</Text>
+          <FastImage
+            source={{uri: userInfo?.avatar}}
+            style={{width: 60, height: 60, borderRadius: 40}}
+          />
+
+          <View>
+            {/* Ten */}
+            <Text style={{color: 'white', fontWeight: '600'}}>{userInfo?.name}</Text>
+            {/* Email */}
+            <Text style={{color: '#9c9c9c'}}>{userInfo?.email}</Text>
+          </View>
         </View>
-        {/* Email */}
-        <Text style={{color: 'white'}}>Email</Text>
       </View>
       <DrawerItemList {...props} />
       <View style={{width: '100%', height: 1, backgroundColor: 'rgba(128, 128, 128, 0.3)'}} />
@@ -49,9 +55,36 @@ const DrawerNavigator = () => {
     <Drawer.Navigator
       drawerContent={props => <CustomDrawerContent {...props} />}
       screenOptions={{drawerPosition: 'left', headerShown: false}}>
-      <Drawer.Screen name="TabNavigator" component={TabNavigator} />
-      <Drawer.Screen name="AsyncStorageDemo" component={AsyncStorageDemo} />
-      <Drawer.Screen name="ThrottlingScreen" component={ThrottlingScreen} />
+      <Drawer.Screen
+        name="TabNavigator"
+        component={TabNavigator}
+        options={{
+          drawerLabel: 'Trang chủ',
+          drawerIcon: ({color, size}) => (
+            <MaterialCommunityIcons name="home-circle" color={color} size={size} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="AsyncStorageDemo"
+        component={AsyncStorageDemo}
+        options={{
+          drawerLabel: 'Async Storage',
+          drawerIcon: ({color, size}) => (
+            <MaterialCommunityIcons name="file-document" color={color} size={size} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="ThrottlingScreen"
+        component={ThrottlingScreen}
+        options={{
+          drawerLabel: 'Throttling',
+          drawerIcon: ({color, size}) => (
+            <MaterialCommunityIcons name="cursor-default-click" color={color} size={size} />
+          ),
+        }}
+      />
     </Drawer.Navigator>
   );
 };
