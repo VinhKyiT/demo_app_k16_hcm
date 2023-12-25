@@ -2,7 +2,8 @@ import {View, Text, TextInput, Alert, Switch} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomButton from '~components/CustomButton';
 import useAuth from '~hooks/useAuth';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useRoute} from '@react-navigation/native';
+import NavigationServices from '../../utils/NavigationServices';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
@@ -11,7 +12,6 @@ const LoginScreen = () => {
 
   const {handleLogin, error, isLoading} = useAuth();
 
-  const navigation = useNavigation();
   const {params} = useRoute();
 
   useEffect(() => {
@@ -68,7 +68,7 @@ const LoginScreen = () => {
       />
       <CustomButton
         title={'Đăng ký ngay!'}
-        onPress={() => navigation.navigate('Register')}
+        onPress={() => NavigationServices.navigate('Register')}
         containerStyle={{marginTop: 16}}
       />
     </View>

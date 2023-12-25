@@ -1,9 +1,11 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Entypo from 'react-native-vector-icons/Entypo';
 import FastImageDemo from '~examples/FastImageDemo';
 import FlatListDemo from '~examples/FlatListDemo';
 import TodoListScreen from '~screens/TodoList';
+import InternationalizationDemo from '../examples/InternationalizationDemo';
 
 const Tab = createBottomTabNavigator();
 
@@ -34,6 +36,17 @@ const TabNavigator = () => {
             return (
               <MaterialCommunityIcons name="image-size-select-actual" size={size} color={color} />
             );
+          },
+        }}
+      />
+      <Tab.Screen
+        name="InternationalizationDemo"
+        component={InternationalizationDemo}
+        options={{
+          tabBarLabel: 'Internationalization',
+
+          tabBarIcon: ({color, size}) => {
+            return <Entypo name="globe" size={size} color={color} />;
           },
         }}
       />
