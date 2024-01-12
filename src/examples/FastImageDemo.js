@@ -1,13 +1,42 @@
-import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {
+  ActivityIndicator,
+  Animated,
+  Easing,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Feather from 'react-native-vector-icons/Feather';
 import {IMAGES} from '~assets/images';
 import NavigationServices from '../utils/NavigationServices';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+
+const AnimatedFastImage = Animated.createAnimatedComponent(FastImage);
+
 const FastImageDemo = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
+  const aniValue = useRef(new Animated.Value(0)).current;
+
+  const onPlayButtonPress = () => {
+    if (!isPlaying) {
+      setIsPlaying(true);
+      Animated.loop(
+        Animated.timing(aniValue, {
+          toValue: 1,
+          duration: 5000,
+          useNativeDriver: false,
+          easing: Easing.linear,
+        }),
+      ).start();
+    } else {
+    }
+  };
   const onLoadStart = () => {
     setIsLoading(true);
     setErrorMessage(null);
@@ -58,11 +87,23 @@ const FastImageDemo = () => {
           marginTop: 16,
           backgroundColor: errorMessage ? 'gray' : 'transparent',
         }}>
-        <FastImage
+        <AnimatedFastImage
           onLoadStart={onLoadStart}
           onLoadEnd={onLoadEnd}
           onError={onError}
-          style={styles.imageContainer}
+          style={[
+            styles.imageContainer,
+            {
+              transform: [
+                {
+                  rotate: aniValue.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: ['0deg', '360deg'],
+                  }),
+                },
+              ],
+            },
+          ]}
           // onProgress={({nativeEvent}) => {
           //   console.log(nativeEvent);
           // }}
@@ -75,6 +116,10 @@ const FastImageDemo = () => {
         />
         {isLoading && <ActivityIndicator style={styles.loaderStyle} size={'large'} />}
         {!!errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
+
+        <TouchableOpacity onPress={onPlayButtonPress}>
+          <AntDesign name="caretright" size={24} />
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -84,8 +129,9 @@ export default FastImageDemo;
 
 const styles = StyleSheet.create({
   imageContainer: {
-    width: 300,
+    width: 150,
     height: 150,
+    borderRadius: 999,
   },
   loaderStyle: {
     color: 'green',

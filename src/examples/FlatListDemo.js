@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   StyleSheet,
   TouchableOpacity,
+  Animated,
 } from 'react-native';
 import {FONTS} from '../constants/fonts';
 
@@ -91,11 +92,16 @@ const SET_IS_REFRESHING = 'SET_IS_REFRESHING';
 const SET_IS_LOAD_MORE = 'SET_IS_LOAD_MORE';
 const SET_IS_END_LIST = 'SET_IS_END_LIST';
 
+const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
+const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
+
 const FlatListDemo = () => {
   const [currentOffset, setCurrentOffset] = useState(30);
   const [state, dispatch] = useReducer(listReducer, listInitialState);
   const {userInfo: user} = useAuth();
   const {handleAddToCart, handleRemoveFromCart} = useCart();
+
+  const scrollY = useRef(new Animated.Value(0)).current;
 
   const navigation = useNavigation();
 
@@ -200,29 +206,62 @@ const FlatListDemo = () => {
     [handleAddToCart],
   );
 
+  const handleScrollToTop = useCallback(() => {
+    flatListRef.current.scrollToOffset({offset: 0, animated: true});
+  }, []);
+
   return (
-    <FlatList
-      ref={flatListRef}
-      data={state.listData}
-      keyExtractor={item => item.id}
-      extraData={state.loadingMore}
-      refreshControl={
-        <RefreshControl
-          refreshing={state.refreshing}
-          onRefresh={onRefresh}
-          colors={['red', 'orange', 'blue', 'green']}
-        />
-      }
-      onEndReached={handleLoadMore}
-      onEndReachedThreshold={0.5}
-      initialNumToRender={12}
-      windowSize={25}
-      ItemSeparatorComponent={ItemSeparatorComponent}
-      contentContainerStyle={styles.contentContainer}
-      ListHeaderComponent={ListHeaderComponent}
-      ListFooterComponent={ListFooterComponent}
-      renderItem={renderItem}
-    />
+    <View style={{flex: 1}}>
+      <AnimatedFlatList
+        ref={flatListRef}
+        data={state.listData}
+        keyExtractor={item => item.id}
+        extraData={state.loadingMore}
+        refreshControl={
+          <RefreshControl
+            refreshing={state.refreshing}
+            onRefresh={onRefresh}
+            colors={['red', 'orange', 'blue', 'green']}
+          />
+        }
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.5}
+        initialNumToRender={12}
+        windowSize={25}
+        ItemSeparatorComponent={ItemSeparatorComponent}
+        contentContainerStyle={styles.contentContainer}
+        ListHeaderComponent={ListHeaderComponent}
+        ListFooterComponent={ListFooterComponent}
+        renderItem={renderItem}
+        onScroll={Animated.event([{nativeEvent: {contentOffset: {y: scrollY}}}], {
+          useNativeDriver: false,
+        })}
+      />
+      <AnimatedTouchable
+        onPress={handleScrollToTop}
+        style={{
+          position: 'absolute',
+          bottom: 16,
+          right: scrollY.interpolate({
+            inputRange: [70, 200],
+            outputRange: [-50, 16],
+            extrapolate: 'clamp',
+          }),
+          opacity: scrollY.interpolate({
+            inputRange: [70, 200],
+            outputRange: [0, 1],
+            extrapolate: 'clamp',
+          }),
+          width: 50,
+          height: 50,
+          justifyContent: 'center',
+          alignItems: 'center',
+          borderRadius: 99,
+          backgroundColor: 'orange',
+        }}>
+        <AntDesign name="arrowup" size={24} color="white" />
+      </AnimatedTouchable>
+    </View>
   );
 };
 
