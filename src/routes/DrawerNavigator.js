@@ -12,6 +12,8 @@ import {Text, View} from 'react-native';
 import useAuth from '~hooks/useAuth';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FastImage from 'react-native-fast-image';
+import PanResponders from '~examples/PanResponders';
+import AnimatedDemoScreen from '~examples/Animated';
 
 const Drawer = createDrawerNavigator();
 
@@ -80,6 +82,26 @@ const DrawerNavigator = () => {
         component={ThrottlingScreen}
         options={{
           drawerLabel: 'Throttling',
+          drawerIcon: ({color, size}) => (
+            <MaterialCommunityIcons name="cursor-default-click" color={color} size={size} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="PanResponders"
+        component={PanResponders}
+        options={{
+          drawerLabel: 'PanResponders',
+          drawerIcon: ({color, size}) => (
+            <MaterialCommunityIcons name="cursor-default-click" color={color} size={size} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="AnimatedDemoScreen"
+        component={AnimatedDemoScreen}
+        options={{
+          drawerLabel: 'Animated Demo',
           drawerIcon: ({color, size}) => (
             <MaterialCommunityIcons name="cursor-default-click" color={color} size={size} />
           ),

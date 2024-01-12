@@ -10,14 +10,19 @@ const InternationalizationDemo = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const handleChangeLanguage = lang => {
     setLocale(lang);
-    Alert.alert(I18n.t('alert.alertTitle'), I18n.t('alert.alertLanguageChanged'), [
-      {
-        text: 'OK',
-        onPress: () => {
-          RNRestart.Restart();
-        },
-      },
-    ]);
+    // Alert.alert(I18n.t('alert.alertTitle'), I18n.t('alert.alertLanguageChanged'), [
+    //   {
+    //     text: 'OK',
+    //     onPress: () => {
+    //       RNRestart.Restart();
+    //     },
+    //   },
+    // ]);
+    showModal({
+      title: I18n.t('alert.alertTitle'),
+      content: I18n.t('alert.alertLanguageChanged'),
+      onConfirm: RNRestart.Restart,
+    });
   };
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
