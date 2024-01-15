@@ -8,6 +8,7 @@ import TodoListScreen from '~screens/TodoList';
 import InternationalizationDemo from '../examples/InternationalizationDemo';
 import TwitterProfile from '~screens/TwitterProfile';
 import BottomSheetDemo from '~screens/BottomSheetDemo';
+import FlatListCarousel from '~screens/FlatListCarousel';
 
 const Tab = createBottomTabNavigator();
 
@@ -64,8 +65,8 @@ const TabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="FlatListDemo"
-        component={FlatListDemo}
+        name="FlatListCarousel"
+        component={FlatListCarousel}
         options={{
           tabBarLabel: 'FlatList',
           tabBarIcon: ({color, size}) => {

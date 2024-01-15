@@ -1,13 +1,18 @@
-import {View, Text, Alert, StyleSheet, Pressable} from 'react-native';
-import React, {useState} from 'react';
+import {View, Text, StyleSheet, Pressable, TouchableOpacity} from 'react-native';
+import React, {useMemo, useRef, useState} from 'react';
 import {I18n, setLocale} from '../i18n';
 import CustomButton from '../components/CustomButton';
 import RNRestart from 'react-native-restart';
 import Modal from 'react-native-modal';
 import {showModal} from '../components/AppModal';
+import BottomSheet from '@gorhom/bottom-sheet';
+import AppText from '~components/AppText';
 
 const InternationalizationDemo = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  // ref
+  const bottomSheetRef = useRef(null);
+
   const handleChangeLanguage = lang => {
     setLocale(lang);
     // Alert.alert(I18n.t('alert.alertTitle'), I18n.t('alert.alertLanguageChanged'), [
@@ -27,8 +32,12 @@ const InternationalizationDemo = () => {
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
   };
+
+  // snap point
+  const snapPoints = useMemo(() => ['25%', '50%'], []);
+
   return (
-    <View>
+    <View style={{flex: 1}}>
       <Text>{I18n.t('welcome')}</Text>
       <Text>{I18n.t('greet', {name: 'John'})}</Text>
       <CustomButton
@@ -56,6 +65,12 @@ const InternationalizationDemo = () => {
           });
         }}
       />
+      <CustomButton
+        title="Change Language"
+        onPress={() => {
+          bottomSheetRef.current.snapToIndex(0);
+        }}
+      />
       <Modal
         isVisible={isModalVisible}
         animationIn="slideInUp" // Hiệu ứng khi mở Modal
@@ -71,6 +86,29 @@ const InternationalizationDemo = () => {
           </View>
         </View>
       </Modal>
+      <BottomSheet
+        handleIndicatorStyle={{backgroundColor: 'red'}}
+        index={-1}
+        ref={bottomSheetRef}
+        enablePanDownToClose
+        snapPoints={snapPoints}>
+        <View style={{paddingHorizontal: 16}}>
+          <TouchableOpacity
+            style={{paddingVertical: 16}}
+            onPress={() => {
+              handleChangeLanguage('en');
+            }}>
+            <AppText>English</AppText>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{paddingVertical: 16}}
+            onPress={() => {
+              handleChangeLanguage('vi');
+            }}>
+            <AppText>Tiếng Việt</AppText>
+          </TouchableOpacity>
+        </View>
+      </BottomSheet>
     </View>
   );
 };
