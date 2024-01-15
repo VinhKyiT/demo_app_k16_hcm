@@ -6,6 +6,8 @@ import FastImageDemo from '~examples/FastImageDemo';
 import FlatListDemo from '~examples/FlatListDemo';
 import TodoListScreen from '~screens/TodoList';
 import InternationalizationDemo from '../examples/InternationalizationDemo';
+import TwitterProfile from '~screens/TwitterProfile';
+import BottomSheetDemo from '~screens/BottomSheetDemo';
 
 const Tab = createBottomTabNavigator();
 
@@ -27,10 +29,10 @@ const TabNavigator = () => {
       }}>
       {/* <Tab.Screen name="DrawerNavigator" component={DrawerNavigator} /> */}
       <Tab.Screen
-        name="FastImageDemo"
-        component={FastImageDemo}
+        name="TwitterProfile"
+        component={TwitterProfile}
         options={{
-          tabBarLabel: 'Fast Image',
+          tabBarLabel: 'Twitter Profile',
 
           tabBarIcon: ({color, size}) => {
             return (
@@ -51,10 +53,10 @@ const TabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="TodoListScreen"
-        component={TodoListScreen}
+        name="BottomSheetDemo"
+        component={BottomSheetDemo}
         options={{
-          tabBarLabel: 'Todo List',
+          tabBarLabel: 'Bottom Sheet',
 
           tabBarIcon: ({color, size}) => {
             return <MaterialCommunityIcons name="list-status" size={size} color={color} />;
