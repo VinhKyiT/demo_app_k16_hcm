@@ -5,6 +5,7 @@ import AppSplash from '../screens/AppSplash';
 import {ROUTES} from '~constants/routes';
 import OnboardingScreen from '~screens/Onboarding';
 import LoginScreen from '~screens/Login';
+import DrawerNavigator from './DrawerNavigator';
 
 const Stack = createStackNavigator();
 
@@ -15,8 +16,8 @@ function MainNavigator() {
         <Stack.Screen name={ROUTES.APP_SPASH} component={AppSplash} />
         <Stack.Screen name={ROUTES.ONBOARDING} component={OnboardingScreen} />
         <Stack.Screen name={ROUTES.LOGIN} component={LoginScreen} />
-        {/* <Stack.Screen name="DrawerNavigator" component={DrawerNavigator} />
-        <Stack.Screen name="TabNavigator" component={TabNavigator} /> */}
+        <Stack.Screen name={ROUTES.DRAWER} component={DrawerNavigator} />
+        {/* <Stack.Screen name="TabNavigator" component={TabNavigator} /> */}
       </>
     </Stack.Navigator>
   );

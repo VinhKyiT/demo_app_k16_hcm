@@ -5,14 +5,14 @@ const FONTS = {
   TEXT: {
     REGULAR: `${TEXT_FONT_PREFIX}-Regular`,
     MEDIUM: `${TEXT_FONT_PREFIX}-Medium`,
-    SEMIBOLD: `${TEXT_FONT_PREFIX}-SemiBold`,
+    SEMIBOLD: `${TEXT_FONT_PREFIX}-Semibold`,
     BOLD: `${TEXT_FONT_PREFIX}-Bold`,
     HEAVY: `${TEXT_FONT_PREFIX}-Heavy`,
   },
   ROUNDED: {
     REGULAR: `${ROUNDED_FONT_PREFIX}-Regular`,
     MEDIUM: `${ROUNDED_FONT_PREFIX}-Medium`,
-    SEMIBOLD: `${ROUNDED_FONT_PREFIX}-SemiBold`,
+    SEMIBOLD: `${ROUNDED_FONT_PREFIX}-Semibold`,
     BOLD: `${ROUNDED_FONT_PREFIX}-Bold`,
     HEAVY: `${ROUNDED_FONT_PREFIX}-Heavy`,
   },

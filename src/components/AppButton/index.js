@@ -1,5 +1,8 @@
-import {TouchableOpacity, Text, StyleSheet, ActivityIndicator} from 'react-native';
+import {TouchableOpacity, StyleSheet, ActivityIndicator} from 'react-native';
 import React, {useMemo} from 'react';
+import AppText from '~components/AppText';
+import {COLORS} from '~constants/colors';
+import {FONTS} from '~constants/fonts';
 
 const AppButton = ({title, onPress, containerStyle, titleStyle, isLoading}) => {
   const componentContainerStyle = useMemo(() => {
@@ -10,11 +13,11 @@ const AppButton = ({title, onPress, containerStyle, titleStyle, isLoading}) => {
     };
   }, [containerStyle]);
   return (
-    <TouchableOpacity onPress={onPress} style={componentContainerStyle}>
+    <TouchableOpacity activeOpacity={0.7} onPress={onPress} style={componentContainerStyle}>
       {isLoading ? (
-        <ActivityIndicator />
+        <ActivityIndicator size={30} />
       ) : (
-        <Text style={titleStyle ? titleStyle : styles.title}>{title}</Text>
+        <AppText style={[styles.title, titleStyle && titleStyle]}>{title}</AppText>
       )}
     </TouchableOpacity>
   );
@@ -24,13 +27,16 @@ export default AppButton;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#ad531f',
+    backgroundColor: COLORS.APP_ORANGE,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 8,
+    paddingVertical: 16,
     paddingHorizontal: 16,
+    borderRadius: 24,
   },
   title: {
-    color: '#fff',
+    color: COLORS.WHITE,
+    fontFamily: FONTS.TEXT.SEMIBOLD,
+    fontSize: 16,
   },
 });

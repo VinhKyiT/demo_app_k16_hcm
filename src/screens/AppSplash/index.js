@@ -18,15 +18,14 @@ const AppSplash = () => {
   const handleSplashData = useCallback(async () => {
     const isShownOnboarding = await retrieveOnboardingStatus();
     const isLoggedIn = await retrieveLoggedInData();
-    console.log('isShownOnboarding', isShownOnboarding);
     if (isShownOnboarding) {
       if (isLoggedIn) {
-        NavigationServices.navigate(ROUTES.DRAWER);
+        NavigationServices.replace(ROUTES.DRAWER);
       } else {
-        NavigationServices.navigate(ROUTES.LOGIN);
+        NavigationServices.replace(ROUTES.LOGIN);
       }
     } else {
-      NavigationServices.navigate(ROUTES.ONBOARDING);
+      NavigationServices.replace(ROUTES.ONBOARDING);
     }
     SplashScreen.hide();
   }, [retrieveLoggedInData]);

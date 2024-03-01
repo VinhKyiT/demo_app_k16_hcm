@@ -1,14 +1,12 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Entypo from 'react-native-vector-icons/Entypo';
-import FastImageDemo from '~examples/FastImageDemo';
-import FlatListDemo from '~examples/FlatListDemo';
-import TodoListScreen from '~screens/TodoList';
-import InternationalizationDemo from '../examples/InternationalizationDemo';
-import TwitterProfile from '~screens/TwitterProfile';
-import BottomSheetDemo from '~screens/BottomSheetDemo';
-import FlatListCarousel from '~screens/FlatListCarousel';
+import {COLORS} from '~constants/colors';
+import {ROUTES} from '~constants/routes';
+import HistoryScreen from '~screens/History';
+import HomeScreen from '~screens/Home';
+import MyProfileScreen from '~screens/MyProfile';
+import WishlistScreen from '~screens/Wishlist';
 
 const Tab = createBottomTabNavigator();
 
@@ -16,25 +14,13 @@ const TabNavigator = () => {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarLabelStyle: {
-          fontSize: 14,
-        },
-        tabBarActiveTintColor: 'green',
-        // tabBarInactiveTintColor: 'red',
-        // tabBarActiveBackgroundColor: 'red',
-        // tabBarStyle: {
-        //   backgroundColor: 'red',
-        // },
-        // lazy: false,
+        tabBarActiveTintColor: COLORS.APP_ORANGE,
         headerShown: false,
       }}>
-      {/* <Tab.Screen name="DrawerNavigator" component={DrawerNavigator} /> */}
       <Tab.Screen
-        name="TwitterProfile"
-        component={TwitterProfile}
+        name={ROUTES.HOME}
+        component={HomeScreen}
         options={{
-          tabBarLabel: 'Twitter Profile',
-
           tabBarIcon: ({color, size}) => {
             return (
               <MaterialCommunityIcons name="image-size-select-actual" size={size} color={color} />
@@ -43,36 +29,36 @@ const TabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="InternationalizationDemo"
-        component={InternationalizationDemo}
+        name={ROUTES.WISHLIST}
+        component={WishlistScreen}
         options={{
-          tabBarLabel: 'Internationalization',
-
           tabBarIcon: ({color, size}) => {
-            return <Entypo name="globe" size={size} color={color} />;
+            return (
+              <MaterialCommunityIcons name="image-size-select-actual" size={size} color={color} />
+            );
           },
         }}
       />
       <Tab.Screen
-        name="BottomSheetDemo"
-        component={BottomSheetDemo}
+        name={ROUTES.MY_PROFILE}
+        component={MyProfileScreen}
         options={{
-          tabBarLabel: 'Bottom Sheet',
-
           tabBarIcon: ({color, size}) => {
-            return <MaterialCommunityIcons name="list-status" size={size} color={color} />;
+            return (
+              <MaterialCommunityIcons name="image-size-select-actual" size={size} color={color} />
+            );
           },
         }}
       />
       <Tab.Screen
-        name="FlatListCarousel"
-        component={FlatListCarousel}
+        name={ROUTES.HISTORY}
+        component={HistoryScreen}
         options={{
-          tabBarLabel: 'FlatList',
           tabBarIcon: ({color, size}) => {
-            return <MaterialCommunityIcons name="format-list-bulleted" size={size} color={color} />;
+            return (
+              <MaterialCommunityIcons name="image-size-select-actual" size={size} color={color} />
+            );
           },
-          // tabBarBadge: 'new',
         }}
       />
     </Tab.Navigator>
