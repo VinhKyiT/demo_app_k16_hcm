@@ -1,9 +1,8 @@
+import { FOODS_IMAGES } from "./foods";
 const IMAGES = {
-  IMG_DEFAULT: require('./DEFAULT_IMAGE.png'),
-  MEN: require('./MEN.jpg'),
-  DECOR: require('./DECOR.jpg'),
-  WOMAN: require('./WOMAN.jpg'),
-  KID: require('./KID.jpg'),
+  FOODS: FOODS_IMAGES,
+  MINI_LOGO: require("./mini_logo.png"),
+  ONBOARDING_WOMAN: require("./onboarding_woman.png"),
 };
 
-export {IMAGES};
+export { IMAGES };

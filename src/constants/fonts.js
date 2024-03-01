@@ -1,13 +1,21 @@
-const FONT_PREFIX = 'OpenSans';
+const TEXT_FONT_PREFIX = 'SF-Pro-Text';
+const ROUNDED_FONT_PREFIX = 'SF-Pro-Rounded';
 
 const FONTS = {
-  LIGHT: `${FONT_PREFIX}-Light`,
-  REGULAR: `${FONT_PREFIX}-Regular`,
-  MEDIUM: `${FONT_PREFIX}-Medium`,
-  SEMIBOLD: `${FONT_PREFIX}-SemiBold`,
-  BOLD: `${FONT_PREFIX}-Bold`,
-  EXTRABOLD: `${FONT_PREFIX}-ExtraBold`,
-  ITALIC: `${FONT_PREFIX}-Italic`,
+  TEXT: {
+    REGULAR: `${TEXT_FONT_PREFIX}-Regular`,
+    MEDIUM: `${TEXT_FONT_PREFIX}-Medium`,
+    SEMIBOLD: `${TEXT_FONT_PREFIX}-SemiBold`,
+    BOLD: `${TEXT_FONT_PREFIX}-Bold`,
+    HEAVY: `${TEXT_FONT_PREFIX}-Heavy`,
+  },
+  ROUNDED: {
+    REGULAR: `${ROUNDED_FONT_PREFIX}-Regular`,
+    MEDIUM: `${ROUNDED_FONT_PREFIX}-Medium`,
+    SEMIBOLD: `${ROUNDED_FONT_PREFIX}-SemiBold`,
+    BOLD: `${ROUNDED_FONT_PREFIX}-Bold`,
+    HEAVY: `${ROUNDED_FONT_PREFIX}-Heavy`,
+  },
 };
 
 export {FONTS};

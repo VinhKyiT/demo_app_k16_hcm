@@ -3,7 +3,7 @@ import React, {useState, useEffect} from 'react';
 import Modal from 'react-native-modal';
 import {FONTS} from '~constants/fonts';
 import AppText from '../AppText';
-import CustomButton from '../CustomButton';
+import CustomButton from '../AppButton';
 
 const defaultOptions = {
   title: '',

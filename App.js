@@ -2,7 +2,6 @@ import {NavigationContainer} from '@react-navigation/native';
 import React, {useLayoutEffect} from 'react';
 import {View} from 'react-native';
 import AuthProvider from '~contexts/AuthProvider';
-import CartProvider from '~contexts/CartProvider';
 import MainNavigator from './src/routes/MainNavigator';
 import NavigationServices from './src/utils/NavigationServices';
 import {initLocale} from './src/i18n';
@@ -18,10 +17,8 @@ const App = () => {
       <View style={{flex: 1}}>
         <GestureHandlerRootView style={{flex: 1}}>
           <AuthProvider>
-            <CartProvider>
-              <MainNavigator />
-              <AppModal />
-            </CartProvider>
+            <MainNavigator />
+            <AppModal />
           </AuthProvider>
         </GestureHandlerRootView>
       </View>
