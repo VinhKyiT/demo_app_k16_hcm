@@ -6,6 +6,8 @@ import {ROUTES} from '~constants/routes';
 import OnboardingScreen from '~screens/Onboarding';
 import LoginScreen from '~screens/Login';
 import DrawerNavigator from './DrawerNavigator';
+import CartScreen from '../screens/Cart';
+import SearchScreen from '../screens/Search';
 
 const Stack = createStackNavigator();
 
@@ -17,7 +19,8 @@ function MainNavigator() {
         <Stack.Screen name={ROUTES.ONBOARDING} component={OnboardingScreen} />
         <Stack.Screen name={ROUTES.LOGIN} component={LoginScreen} />
         <Stack.Screen name={ROUTES.DRAWER} component={DrawerNavigator} />
-        {/* <Stack.Screen name="TabNavigator" component={TabNavigator} /> */}
+        <Stack.Screen name={ROUTES.CART} component={CartScreen} />
+        <Stack.Screen name={ROUTES.SEARCH} component={SearchScreen} />
       </>
     </Stack.Navigator>
   );

@@ -8,6 +8,8 @@ const ROUTES = {
   WISHLIST: 'WishlistScreen',
   MY_PROFILE: 'MyProfileScreen',
   HISTORY: 'HistoryScreen',
+  CART: 'CartScreen',
+  SEARCH: 'SearchScreen',
 };
 
 export {ROUTES};
