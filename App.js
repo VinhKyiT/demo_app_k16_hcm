@@ -7,6 +7,7 @@ import NavigationServices from './src/utils/NavigationServices';
 import {initLocale} from './src/i18n';
 import AppModal from './src/components/AppModal';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import CartProvider from '~contexts/CartProvider';
 
 const App = () => {
   useLayoutEffect(() => {
@@ -17,8 +18,10 @@ const App = () => {
       <View style={{flex: 1}}>
         <GestureHandlerRootView style={{flex: 1}}>
           <AuthProvider>
-            <MainNavigator />
-            <AppModal />
+            <CartProvider>
+              <MainNavigator />
+              <AppModal />
+            </CartProvider>
           </AuthProvider>
         </GestureHandlerRootView>
       </View>

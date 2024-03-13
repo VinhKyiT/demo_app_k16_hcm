@@ -6,10 +6,10 @@ import FastImage from 'react-native-fast-image';
 import {FONTS} from '../../constants/fonts';
 import {COLORS} from '../../constants/colors';
 
-const ProductItem = ({item}) => {
+const ProductItem = ({item, onItemPress}) => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity activeOpacity={0.8}>
+      <TouchableOpacity activeOpacity={0.8} onPress={onItemPress}>
         <View style={styles.itemWrapper}>
           <FastImage
             source={item.image}

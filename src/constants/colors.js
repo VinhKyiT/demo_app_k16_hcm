@@ -16,6 +16,7 @@ const COLORS = {
   ICON_GRAY: '#A9A9A9',
   SEARCH_BOX_BG: '#EFEEEE',
   TEXT_GRAY: '#787777',
+  DOT_INACTIVE: '#C4C4C4',
 };
 
 export {COLORS};

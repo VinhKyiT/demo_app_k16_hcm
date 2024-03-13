@@ -6,13 +6,22 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.SCREEN_BG,
   },
-  stdInstruction: {
-    flexDirection: 'row',
-    marginVertical: 16,
+  carouselItem: {
+    flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
   },
-  contentContainer: {
+  carouselImage: {
+    width: '100%',
+    height: '100%',
+  },
+  dotContainer: {
+    marginTop: 16,
+  },
+  productInfoWrapper: {
+    marginTop: 16,
+  },
+  bodySection: {
+    marginTop: 32,
     paddingHorizontal: 16,
   },
   buttonContainer: {

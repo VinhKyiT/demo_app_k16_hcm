@@ -8,6 +8,7 @@ import LoginScreen from '~screens/Login';
 import DrawerNavigator from './DrawerNavigator';
 import CartScreen from '../screens/Cart';
 import SearchScreen from '../screens/Search';
+import ProductDetailScreen from '~screens/ProductDetail';
 
 const Stack = createStackNavigator();
 
@@ -21,6 +22,7 @@ function MainNavigator() {
         <Stack.Screen name={ROUTES.DRAWER} component={DrawerNavigator} />
         <Stack.Screen name={ROUTES.CART} component={CartScreen} />
         <Stack.Screen name={ROUTES.SEARCH} component={SearchScreen} />
+        <Stack.Screen name={ROUTES.PRODUCT_DETAIL} component={ProductDetailScreen} />
       </>
     </Stack.Navigator>
   );

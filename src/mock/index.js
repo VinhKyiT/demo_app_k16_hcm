@@ -33,7 +33,7 @@ export const foodData = [
     photos: [
       'https://www.englishclub.com/images/vocabulary/food/health/healthy.jpg',
       'https://gymme.vn/wp-content/uploads/2020/08/eat-clean-tim-khoe.jpg',
-      'https://chaluahailua.vn/wp-content/uploads/2021/09/thuc-don-healthy-foods-trong-7-ngay-22.jpg',
+      'https://chaluahailua.vn/wp-content/uploads/2023/07/Cha-lua-Shop-Online.jpg',
     ],
   },
   {

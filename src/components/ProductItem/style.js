@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
   },
   productText: {
     marginVertical: 8,
+    marginHorizontal: 8,
   },
 });
 

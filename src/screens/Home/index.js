@@ -16,7 +16,12 @@ const HomeScreen = () => {
   const renderItem = useCallback(({item}) => {
     return (
       <View style={styles.itemContainer}>
-        <ProductItem item={item} />
+        <ProductItem
+          item={item}
+          onItemPress={() => {
+            NavigationServices.navigate(ROUTES.PRODUCT_DETAIL, {item});
+          }}
+        />
       </View>
     );
   }, []);
