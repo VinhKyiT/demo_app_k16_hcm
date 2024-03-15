@@ -9,9 +9,10 @@ import AppText from '~components/AppText';
 import AppIcon from '~components/AppIcon';
 import CartItem from '~components/CartItem';
 import AppButton from '~components/AppButton';
+import {showModal} from '~components/AppModal';
 
 const CartScreen = () => {
-  const {cartData, handleUpdateCartItem} = useCart();
+  const {cartData, handleUpdateCartItem, handleRemoveFromCart} = useCart();
   const renderItem = useCallback(
     ({item}) => {
       return (
@@ -19,7 +20,18 @@ const CartScreen = () => {
           <CartItem
             item={item}
             onMinusPress={() => {
-              handleUpdateCartItem(item?.id, -1);
+              if (item?.quantity === 1) {
+                showModal({
+                  title: 'Thông báo',
+                  content: `Bạn có muốn xoá ${item?.name} khỏi giỏ hàng?`,
+                  hasCancel: true,
+                  onConfirm: () => {
+                    handleRemoveFromCart(item?.id);
+                  },
+                });
+              } else {
+                handleUpdateCartItem(item?.id, -1);
+              }
             }}
             onPlusPress={() => {
               handleUpdateCartItem(item?.id, 1);
@@ -28,7 +40,7 @@ const CartScreen = () => {
         </View>
       );
     },
-    [handleUpdateCartItem],
+    [handleRemoveFromCart, handleUpdateCartItem],
   );
   return (
     <View style={styles.container}>
@@ -53,7 +65,11 @@ const CartScreen = () => {
         ItemSeparatorComponent={<View style={{height: 16}} />}
       />
       <View style={styles.buttonContainer}>
-        <AppButton title={'Complete order'} onPress={() => {}} />
+        <AppButton
+          title={'Complete order'}
+          onPress={() => {}}
+          disabled={Array.isArray(cartData) && cartData?.length === 0}
+        />
       </View>
     </View>
   );

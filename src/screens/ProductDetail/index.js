@@ -57,7 +57,11 @@ const ProductDetailScreen = () => {
         scrollAnimationDuration={500}
         loop
         onProgressChange={(_, absoluteProgress) => {
-          setCurrentIndex(Math.round(absoluteProgress));
+          if (absoluteProgress > productItem?.photos?.length - 0.5) {
+            setCurrentIndex(0);
+          } else {
+            setCurrentIndex(Math.round(absoluteProgress));
+          }
         }}
       />
       <View style={styles.dotContainer}>

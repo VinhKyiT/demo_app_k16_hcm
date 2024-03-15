@@ -7,6 +7,7 @@ const ROUTES = {
   ONBOARDING: 'OnboardingScreen',
   WISHLIST: 'WishlistScreen',
   MY_PROFILE: 'MyProfileScreen',
+  EDIT_PROFILE: 'EditProfileScreen',
   HISTORY: 'HistoryScreen',
   CART: 'CartScreen',
   SEARCH: 'SearchScreen',

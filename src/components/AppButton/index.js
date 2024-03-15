@@ -4,7 +4,7 @@ import AppText from '~components/AppText';
 import {COLORS} from '~constants/colors';
 import {FONTS} from '~constants/fonts';
 
-const AppButton = ({title, onPress, containerStyle, titleStyle, isLoading}) => {
+const AppButton = ({title, onPress, containerStyle, titleStyle, isLoading, disabled}) => {
   const componentContainerStyle = useMemo(() => {
     const defaultStyle = styles.container;
     return {
@@ -13,7 +13,11 @@ const AppButton = ({title, onPress, containerStyle, titleStyle, isLoading}) => {
     };
   }, [containerStyle]);
   return (
-    <TouchableOpacity activeOpacity={0.7} onPress={onPress} style={componentContainerStyle}>
+    <TouchableOpacity
+      disabled={disabled}
+      activeOpacity={0.7}
+      onPress={onPress}
+      style={componentContainerStyle}>
       {isLoading ? (
         <ActivityIndicator size={30} />
       ) : (

@@ -1,9 +1,10 @@
-import {View, StyleSheet, DeviceEventEmitter} from 'react-native';
+import {View, StyleSheet, DeviceEventEmitter, TouchableOpacity} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import Modal from 'react-native-modal';
 import {FONTS} from '~constants/fonts';
 import AppText from '../AppText';
 import CustomButton from '../AppButton';
+import {COLORS} from '~constants/colors';
 
 const defaultOptions = {
   title: '',
@@ -73,17 +74,30 @@ const AppModal = () => {
                 <AppText style={styles.modalText}>{options.content}</AppText>
               )}
             </View>
-            <View style={{flexDirection: 'row', justifyContent: 'space-between', marginBottom: 16}}>
-              {!!options.hasCancel && (
-                <CustomButton
-                  style={{backgroundColor: 'transparent'}}
-                  title={options.cancelText}
-                  onPress={onCancel}
-                />
-              )}
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginBottom: 16,
+                paddingHorizontal: 16,
+              }}>
+              <View style={{paddingVertical: 16, paddingHorizontal: 40}}>
+                {!!options.hasCancel && (
+                  <TouchableOpacity onPress={onCancel}>
+                    <AppText color={COLORS.TEXT_GRAY} font={FONTS.TEXT.SEMIBOLD} size={16}>
+                      {options.cancelText}
+                    </AppText>
+                  </TouchableOpacity>
+                )}
+              </View>
               <CustomButton
                 titleStyle={{color: '#fff', fontFamily: FONTS.BOLD, fontSize: 16}}
-                style={{backgroundColor: '#FA4A0C', paddingVertical: 8, borderRadius: 99}}
+                containerStyle={{
+                  backgroundColor: '#FA4A0C',
+                  paddingVertical: 8,
+                  borderRadius: 99,
+                  flexGrow: 1,
+                }}
                 title={options.confirmText}
                 onPress={onConfirm}
               />
