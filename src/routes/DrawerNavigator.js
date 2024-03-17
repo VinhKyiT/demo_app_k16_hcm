@@ -8,6 +8,7 @@ import React from 'react';
 import {View} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import TabNavigator from './TabNavigator';
+import DemoGestureHandler from '../screens/Reanimated';
 
 const Drawer = createDrawerNavigator();
 
@@ -38,6 +39,16 @@ const DrawerNavigator = () => {
         component={TabNavigator}
         options={{
           drawerLabel: 'Home',
+          drawerIcon: ({color, size}) => (
+            <MaterialCommunityIcons name="home-circle" color={color} size={size} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="DemoGestureHandler"
+        component={DemoGestureHandler}
+        options={{
+          drawerLabel: 'Gesture Handler',
           drawerIcon: ({color, size}) => (
             <MaterialCommunityIcons name="home-circle" color={color} size={size} />
           ),

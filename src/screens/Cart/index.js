@@ -13,6 +13,19 @@ import {showModal} from '~components/AppModal';
 
 const CartScreen = () => {
   const {cartData, handleUpdateCartItem, handleRemoveFromCart} = useCart();
+  const handleRemoveCart = useCallback(
+    item => {
+      showModal({
+        title: 'Thông báo',
+        content: `Bạn có muốn xoá ${item?.name} khỏi giỏ hàng?`,
+        hasCancel: true,
+        onConfirm: () => {
+          handleRemoveFromCart(item?.id);
+        },
+      });
+    },
+    [handleRemoveFromCart],
+  );
   const renderItem = useCallback(
     ({item}) => {
       return (
@@ -21,14 +34,7 @@ const CartScreen = () => {
             item={item}
             onMinusPress={() => {
               if (item?.quantity === 1) {
-                showModal({
-                  title: 'Thông báo',
-                  content: `Bạn có muốn xoá ${item?.name} khỏi giỏ hàng?`,
-                  hasCancel: true,
-                  onConfirm: () => {
-                    handleRemoveFromCart(item?.id);
-                  },
-                });
+                handleRemoveCart(item);
               } else {
                 handleUpdateCartItem(item?.id, -1);
               }
@@ -36,11 +42,12 @@ const CartScreen = () => {
             onPlusPress={() => {
               handleUpdateCartItem(item?.id, 1);
             }}
+            onRemoveFromCart={handleRemoveCart}
           />
         </View>
       );
     },
-    [handleRemoveFromCart, handleUpdateCartItem],
+    [handleRemoveCart, handleUpdateCartItem],
   );
   return (
     <View style={styles.container}>
