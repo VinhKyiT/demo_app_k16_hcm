@@ -2,7 +2,6 @@ import React, {useCallback} from 'react';
 import {FlatList, View} from 'react-native';
 import AppHeader from '~components/AppHeader';
 import {COLORS} from '~constants/colors';
-import useCart from '~hooks/useCart';
 import NavigationServices from '~utils/NavigationServices';
 import styles from './styles';
 import AppText from '~components/AppText';
@@ -10,9 +9,12 @@ import AppIcon from '~components/AppIcon';
 import CartItem from '~components/CartItem';
 import AppButton from '~components/AppButton';
 import {showModal} from '~components/AppModal';
+import {useDispatch, useSelector} from 'react-redux';
+import {removeFromCart, updateCartItem} from '../../redux/cart/actions';
 
 const CartScreen = () => {
-  const {cartData, handleUpdateCartItem, handleRemoveFromCart} = useCart();
+  const dispatch = useDispatch();
+  const cartData = useSelector(state => state.cart.carts);
   const handleRemoveCart = useCallback(
     item => {
       showModal({
@@ -20,11 +22,12 @@ const CartScreen = () => {
         content: `Bạn có muốn xoá ${item?.name} khỏi giỏ hàng?`,
         hasCancel: true,
         onConfirm: () => {
-          handleRemoveFromCart(item?.id);
+          // handleRemoveFromCart(item?.id);
+          dispatch(removeFromCart(item?.id));
         },
       });
     },
-    [handleRemoveFromCart],
+    [dispatch],
   );
   const renderItem = useCallback(
     ({item}) => {
@@ -36,18 +39,20 @@ const CartScreen = () => {
               if (item?.quantity === 1) {
                 handleRemoveCart(item);
               } else {
-                handleUpdateCartItem(item?.id, -1);
+                // handleUpdateCartItem(item?.id, -1);
+                dispatch(updateCartItem({itemId: item?.id, quantity: -1}));
               }
             }}
             onPlusPress={() => {
-              handleUpdateCartItem(item?.id, 1);
+              // handleUpdateCartItem(item?.id, 1);
+              dispatch(updateCartItem({itemId: item?.id, quantity: 1}));
             }}
             onRemoveFromCart={handleRemoveCart}
           />
         </View>
       );
     },
-    [handleRemoveCart, handleUpdateCartItem],
+    [dispatch, handleRemoveCart],
   );
   return (
     <View style={styles.container}>

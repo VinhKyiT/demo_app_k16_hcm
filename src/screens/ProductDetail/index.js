@@ -1,5 +1,5 @@
 import {View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import styles from './styles';
 import {useRoute} from '@react-navigation/native';
 import AppHeader from '~components/AppHeader';
@@ -13,13 +13,18 @@ import AppText from '~components/AppText';
 import {FONTS} from '~constants/fonts';
 import BodySection from './components/BodySection';
 import AppButton from '~components/AppButton';
-import useCart from '~hooks/useCart';
+import {useDispatch} from 'react-redux';
+import {addToCart} from '../../redux/cart/actions';
 
 const ProductDetailScreen = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const route = useRoute();
   const productItem = route?.params?.item || {};
-  const {handleAddToCart} = useCart();
+  const dispatch = useDispatch();
+
+  const handleAddToCart = () => {
+    dispatch(addToCart(productItem));
+  };
 
   return (
     <View style={styles.container}>
@@ -87,12 +92,7 @@ const ProductDetailScreen = () => {
         />
       </View>
       <View style={styles.buttonContainer}>
-        <AppButton
-          title={'Add to cart'}
-          onPress={() => {
-            handleAddToCart(productItem);
-          }}
-        />
+        <AppButton title={'Add to cart'} onPress={handleAddToCart} />
       </View>
     </View>
   );

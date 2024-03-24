@@ -1,5 +1,6 @@
 import React, {useCallback, useState} from 'react';
 import {FlatList, ScrollView, TouchableOpacity, View} from 'react-native';
+import {useSelector} from 'react-redux';
 import AppHeader from '../../components/AppHeader';
 import AppIcon from '../../components/AppIcon';
 import AppText from '../../components/AppText';
@@ -8,11 +9,16 @@ import {COLORS} from '../../constants/colors';
 import {FONTS} from '../../constants/fonts';
 import {ROUTES} from '../../constants/routes';
 import {foodData, menuData} from '../../mock';
+import {userNameSelector} from '../../redux/auth/selectors';
 import NavigationServices from '../../utils/NavigationServices';
 import styles from './styles';
+import {numberInCartSelector} from '../../redux/cart/selectors';
 
 const HomeScreen = () => {
   const [selectingItem, setSelectingItem] = useState(menuData[0].id);
+  const userName = useSelector(userNameSelector);
+  const numberInCart = useSelector(numberInCartSelector);
+
   const renderItem = useCallback(({item}) => {
     return (
       <View style={styles.itemContainer}>
@@ -43,11 +49,12 @@ const HomeScreen = () => {
           onIconPress: () => {
             NavigationServices.navigate(ROUTES.CART);
           },
+          badge: numberInCart,
         }}
       />
       <View style={styles.sloganContainer}>
         <AppText size={34} font={FONTS.ROUNDED.BOLD}>
-          {'Delicious \nfood for you'}
+          {`Delicious \nfood for ${userName}`}
         </AppText>
       </View>
       <TouchableOpacity

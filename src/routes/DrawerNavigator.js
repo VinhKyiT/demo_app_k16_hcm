@@ -9,11 +9,17 @@ import {View} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import TabNavigator from './TabNavigator';
 import DemoGestureHandler from '../screens/Reanimated';
+import LocalStorage from '../helpers/storage';
+import NavigationServices from '../utils/NavigationServices';
+import {ROUTES} from '../constants/routes';
+import {useDispatch} from 'react-redux';
+import {logout} from '../redux/auth/actions';
 
 const Drawer = createDrawerNavigator();
 
 const CustomDrawerContent = props => {
   const {navigation} = props;
+  const dispatch = useDispatch();
   return (
     <DrawerContentScrollView {...props} contentContainerStyle={{paddingTop: 0}}>
       <DrawerItemList {...props} />
@@ -21,8 +27,11 @@ const CustomDrawerContent = props => {
       <DrawerItem
         label={'Logout'}
         icon={({color, size}) => <MaterialCommunityIcons name="logout" color={color} size={size} />}
-        onPress={() => {
+        onPress={async () => {
           navigation.closeDrawer();
+          await LocalStorage.removeData('IS_LOGGED_IN');
+          NavigationServices.reset({routes: [{name: ROUTES.LOGIN}], index: 0});
+          dispatch(logout());
         }}
       />
     </DrawerContentScrollView>

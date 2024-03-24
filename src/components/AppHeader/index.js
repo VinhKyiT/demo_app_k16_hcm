@@ -4,6 +4,7 @@ import styles from './style';
 import AppIcon from '../AppIcon';
 import AppText from '../AppText';
 import {FONTS} from '../../constants/fonts';
+import {COLORS} from '../../constants/colors';
 
 const AppHeader = ({leftIcon = {}, rightIcon = {}, centerTitle}) => {
   const {
@@ -19,6 +20,7 @@ const AppHeader = ({leftIcon = {}, rightIcon = {}, centerTitle}) => {
     iconSize: rightIconSize,
     iconType: rightIconType,
     onIconPress: onRightIconPress,
+    badge: rightIconBadge,
   } = rightIcon;
   return (
     <View style={styles.container}>
@@ -42,6 +44,24 @@ const AppHeader = ({leftIcon = {}, rightIcon = {}, centerTitle}) => {
           size={rightIconSize}
           color={rightIconColor}
         />
+        {!!rightIconBadge && (
+          <View
+            style={{
+              backgroundColor: 'red',
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: 99,
+              width: 22,
+              height: 22,
+              position: 'absolute',
+              top: -10,
+              right: -10,
+            }}>
+            <AppText size={12} color={COLORS.WHITE}>
+              {rightIconBadge}
+            </AppText>
+          </View>
+        )}
       </TouchableOpacity>
     </View>
   );
