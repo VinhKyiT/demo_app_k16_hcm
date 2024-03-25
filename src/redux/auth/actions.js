@@ -1,7 +1,17 @@
-import {LOGIN_SUCCESS, LOGOUT} from './constants';
+import {LOGIN, LOGOUT} from './constants';
+
+export const loginRequest = payload => ({
+  type: LOGIN.REQUEST,
+  payload,
+});
 
 export const loginSuccess = payload => ({
-  type: LOGIN_SUCCESS,
+  type: LOGIN.SUCCESS,
+  payload,
+});
+
+export const loginFailed = payload => ({
+  type: LOGIN.FAILED,
   payload,
 });
 

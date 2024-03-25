@@ -1,23 +1,21 @@
 import React, {useCallback, useEffect} from 'react';
 import {View} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
+import {useSelector} from 'react-redux';
 import {ROUTES} from '~constants/routes';
 import LocalStorage from '~helpers/storage';
+import {loginStateSelector} from '~redux/auth/selectors';
 import NavigationServices from '~utils/NavigationServices';
 
 const AppSplash = () => {
+  const isLoggedIn = useSelector(loginStateSelector);
   const retrieveOnboardingStatus = async () => {
     const result = await LocalStorage.getData('IS_SHOWN_ONBOARDING');
     return !!result;
   };
-  const retrieveLoggedInData = useCallback(async () => {
-    const result = await LocalStorage.getData('IS_LOGGED_IN');
-    return !!result;
-  }, []);
 
   const handleSplashData = useCallback(async () => {
     const isShownOnboarding = await retrieveOnboardingStatus();
-    const isLoggedIn = await retrieveLoggedInData();
     if (isShownOnboarding) {
       if (isLoggedIn) {
         NavigationServices.replace(ROUTES.DRAWER);
@@ -28,11 +26,11 @@ const AppSplash = () => {
       NavigationServices.replace(ROUTES.ONBOARDING);
     }
     SplashScreen.hide();
-  }, [retrieveLoggedInData]);
+  }, [isLoggedIn]);
 
   useEffect(() => {
     handleSplashData();
-  }, [handleSplashData, retrieveLoggedInData]);
+  }, [handleSplashData]);
 
   return <View />;
 };

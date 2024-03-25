@@ -9,29 +9,35 @@ import {COLORS} from '~constants/colors';
 import {FONTS} from '~constants/fonts';
 import AppButton from '~components/AppButton';
 import NavigationServices from '~utils/NavigationServices';
-import {ROUTES} from '~constants/routes';
-import LocalStorage from '~helpers/storage';
-import {useDispatch} from 'react-redux';
-import {loginSuccess} from '../../redux/auth/actions';
+import {useDispatch, useSelector} from 'react-redux';
+import {loginFailed, loginRequest, loginSuccess} from '../../redux/auth/actions';
 import axios from 'axios';
 import {showModal} from '../../components/AppModal';
+import {
+  getUserProfileFailed,
+  getUserProfileRequest,
+  getUserProfileSuccess,
+} from '~redux/profile/actions';
+import {getLoadingSelector} from '~redux/loading/selector';
+import {LOGIN} from '~redux/auth/constants';
+import withLoading from '~HOCs/withLoading';
 
 const LoginScreen = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
+  const isLoading = useSelector(state => getLoadingSelector(state, [LOGIN.REQUEST]));
 
   const handleLogin = useCallback(async () => {
-    setIsLoading(true);
+    dispatch(loginRequest());
     try {
       const response = await axios.post('https://store.kybuidev.com/api/v1/auth/login', {
         email: email,
         password: password,
       });
-      console.log('response', response);
       if (response?.data?.access_token) {
+        dispatch(getUserProfileRequest());
         const userData = await axios.get('https://store.kybuidev.com/api/v1/auth/profile', {
           headers: {
             Authorization: `Bearer ${response?.data?.access_token}`,
@@ -40,25 +46,26 @@ const LoginScreen = () => {
         if (userData?.data) {
           const userDataValue = userData?.data;
           delete userDataValue?.password;
-          setIsLoading(false);
           dispatch(
             loginSuccess({
               accessToken: response?.data?.access_token,
               refreshToken: response?.data?.refresh_token,
-              userInfo: userDataValue,
             }),
           );
+          dispatch(getUserProfileSuccess(userDataValue));
           NavigationServices.replace('DrawerNavigator');
+        } else {
+          dispatch(getUserProfileFailed('Loi khong xac dinh!'));
         }
       }
     } catch (err) {
       console.log('err', err);
       if (err.response.data?.message === 'Unauthorized') {
+        dispatch(loginFailed(err.response.data?.message));
         showModal({
           title: 'Unauthorized',
           content: 'Please check your email address or password!',
         });
-        setIsLoading(false);
       }
     }
   }, [dispatch, email, password]);
@@ -122,4 +129,4 @@ const LoginScreen = () => {
   );
 };
 
-export default LoginScreen;
+export default withLoading(LoginScreen, [LOGIN.REQUEST]);

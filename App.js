@@ -7,7 +7,10 @@ import {initLocale} from './src/i18n';
 import AppModal from './src/components/AppModal';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {Provider} from 'react-redux';
-import {store} from '~redux/store';
+import {store, persistor} from '~redux/store';
+import {PersistGate} from 'redux-persist/integration/react';
+import {RootSiblingParent} from 'react-native-root-siblings';
+
 const App = () => {
   useLayoutEffect(() => {
     initLocale();
@@ -18,8 +21,12 @@ const App = () => {
       <View style={{flex: 1}}>
         <GestureHandlerRootView style={{flex: 1}}>
           <Provider store={store}>
-            <MainNavigator />
-            <AppModal />
+            <PersistGate persistor={persistor} loading={null}>
+              <RootSiblingParent>
+                <MainNavigator />
+                <AppModal />
+              </RootSiblingParent>
+            </PersistGate>
           </Provider>
         </GestureHandlerRootView>
       </View>

@@ -1,20 +1,25 @@
-import {LOGIN_SUCCESS, LOGOUT} from './constants';
+import {LOGIN, LOGOUT} from './constants';
 
 const initialState = {
   isLoggedIn: false,
   accessToken: '',
   refreshToken: '',
-  userInfo: {},
+  error: null,
 };
 
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
-    case LOGIN_SUCCESS: {
+    case LOGIN.SUCCESS: {
       return {
         isLoggedIn: true,
         accessToken: action.payload?.accessToken,
         refreshToken: action.payload?.refreshToken,
-        userInfo: action.payload?.userInfo,
+      };
+    }
+    case LOGIN.FAILED: {
+      return {
+        ...state,
+        error: action.payload,
       };
     }
     case LOGOUT: {

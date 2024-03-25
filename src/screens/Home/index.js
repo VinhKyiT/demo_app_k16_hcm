@@ -1,6 +1,6 @@
 import React, {useCallback, useState} from 'react';
 import {FlatList, ScrollView, TouchableOpacity, View} from 'react-native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import AppHeader from '../../components/AppHeader';
 import AppIcon from '../../components/AppIcon';
 import AppText from '../../components/AppText';
@@ -9,15 +9,33 @@ import {COLORS} from '../../constants/colors';
 import {FONTS} from '../../constants/fonts';
 import {ROUTES} from '../../constants/routes';
 import {foodData, menuData} from '../../mock';
-import {userNameSelector} from '../../redux/auth/selectors';
 import NavigationServices from '../../utils/NavigationServices';
 import styles from './styles';
 import {numberInCartSelector} from '../../redux/cart/selectors';
+import {getUserNameSelector} from '~redux/profile/selectors';
+import {GET_USER_PROFILE} from '~redux/profile/constants';
+import {getLoadingSelector} from '~redux/loading/selector';
+import {
+  getUserProfileFailed,
+  getUserProfileRequest,
+  getUserProfileSuccess,
+} from '~redux/profile/actions';
+import {accessTokenSelector} from '~redux/auth/selectors';
+import axios from 'axios';
+import withLoading from '~HOCs/withLoading';
 
 const HomeScreen = () => {
   const [selectingItem, setSelectingItem] = useState(menuData[0].id);
-  const userName = useSelector(userNameSelector);
+  const userName = useSelector(getUserNameSelector);
   const numberInCart = useSelector(numberInCartSelector);
+  const accessToken = useSelector(accessTokenSelector);
+  const dispatch = useDispatch();
+
+  const isLoadingProfile = useSelector(state =>
+    getLoadingSelector(state, [GET_USER_PROFILE.REQUEST]),
+  );
+
+  console.log('isLoadingProfile', isLoadingProfile);
 
   const renderItem = useCallback(({item}) => {
     return (
@@ -31,6 +49,28 @@ const HomeScreen = () => {
       </View>
     );
   }, []);
+
+  const getUserInfo = async () => {
+    dispatch(getUserProfileRequest());
+    try {
+      const userData = await axios.get('https://store.kybuidev.com/api/v1/auth/profile', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      console.log('userData', userData);
+      if (userData?.data) {
+        const userDataValue = userData?.data;
+        delete userDataValue?.password;
+        dispatch(getUserProfileSuccess(userDataValue));
+      } else {
+        dispatch(getUserProfileFailed('Loi khong xac dinh!'));
+      }
+    } catch (error) {
+      dispatch(getUserProfileFailed('Loi khong xac dinh!'));
+    }
+  };
+
   return (
     <View style={styles.container}>
       <AppHeader
@@ -52,11 +92,11 @@ const HomeScreen = () => {
           badge: numberInCart,
         }}
       />
-      <View style={styles.sloganContainer}>
+      <TouchableOpacity style={styles.sloganContainer} onPress={getUserInfo} activeOpacity={0.8}>
         <AppText size={34} font={FONTS.ROUNDED.BOLD}>
           {`Delicious \nfood for ${userName}`}
         </AppText>
-      </View>
+      </TouchableOpacity>
       <TouchableOpacity
         style={styles.searchContainer}
         onPress={() => {
@@ -113,4 +153,4 @@ const HomeScreen = () => {
   );
 };
 
-export default HomeScreen;
+export default withLoading(HomeScreen, [GET_USER_PROFILE.REQUEST]);
